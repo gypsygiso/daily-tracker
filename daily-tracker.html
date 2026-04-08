@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="今日點呀">
+<meta name="theme-color" content="#0f0f0f">
+<title>今日點呀</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #2e2e2e;
+    --accent: #c8f06e;
+    --accent2: #f0a06e;
+    --accent3: #6ec8f0;
+    --text: #f0ede8;
+    --text-dim: #7a7772;
+    --danger: #f06e6e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans HK', sans-serif;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overscroll-behavior: none;
+  }
+
+  /* NAV */
+  .nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-btn {
+    flex: 1; padding: 14px 0 10px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-dim);
+    font-family: 'Noto Sans HK', sans-serif;
+    font-size: 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn .icon { font-size: 22px; line-height: 1; }
+
+  /* PAGES */
+  .page { display: none; padding: 0 0 80px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* HEADER */
+  .header {
+    padding: 56px 20px 20px;
+    position: sticky; top: 0;
+    background: var(--bg);
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* TODAY PAGE */
+  .section { padding: 20px; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  /* EMOTION PICKER */
+  .emotion-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .emotion-btn {
+    aspect-ratio: 1;
+    background: var(--surface);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px;
+    transition: all 0.15s;
+    font-size: 26px;
+    padding: 6px 0;
+  }
+  .emotion-btn span.label {
+    font-size: 9px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+  .emotion-btn.selected {
+    border-color: var(--accent);
+    background: rgba(200,240,110,0.08);
+  }
+  .emotion-btn:active { transform: scale(0.93); }
+
+  /* ENERGY BAR */
+  .energy-section { margin-top: 24px; }
+  .energy-track {
+    background: var(--surface);
+    border-radius: 100px;
+    height: 8px;
+    margin: 10px 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .energy-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--danger), var(--accent2), var(--accent));
+    transition: width 0.3s;
+  }
+  .energy-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* TASK INPUT */
+  .task-section { margin-top: 24px; }
+  .task-input-row {
+    display: flex; gap: 8px; margin-bottom: 12px;
+  }
+  .task-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Noto Sans HK', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .task-input:focus { border-color: var(--accent); }
+  .task-input::placeholder { color: var(--text-dim); }
+  .add-btn {
+    width: 46px; height: 46px;
+    background: var(--accent);
+    border: none; border-radius: 12px;
+    color: #0f0f0f; font-size: 22px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+  .add-btn:active { transform: scale(0.92); }
+
+  /* TASK LIST */
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+  .task-item {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    animation: slideIn 0.2s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .task-check {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+  }
+  .task-check.done {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0f0f0f;
+  }
+  .task-text {
+    flex: 1; font-size: 15px;
+    transition: all 0.2s;
+  }
+  .task-text.done {
+    text-decoration: line-through;
+    color: var(--text-dim);
+  }
+  .task-del {
+    background: none; border: none;
+    color: var(--text-dim); font-size: 18px;
+    cursor: pointer; padding: 2px 4px;
+    line-height: 1;
+  }
+
+  /* NOTE */
+  .note-section { margin-top: 24px; }
+  .note-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'Noto Sans HK', sans-serif;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+    min-height: 90px;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+  }
+  .note-input:focus { border-color: var(--accent3); }
+  .note-input::placeholder { color: var(--text-dim); }
+
+  /* SAVE BTN */
+  .save-btn {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 20px 20px 0;
+    padding: 16px;
+    background: var(--accent);
+    border: none; border-radius: 14px;
+    color: #0f0f0f;
+    font-family: 'Noto Sans HK', sans-serif;
+    font-weight: 700; font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .save-btn:active { transform: scale(0.97); opacity: 0.85; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* HISTORY PAGE */
+  .history-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .history-card {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .history-card:active { background: var(--surface2); }
+  .history-card-header {
+    padding: 14px 16px 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .history-card-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .history-card-emotion { font-size: 22px; }
+  .history-card-body { padding: 0 16px 14px; }
+  .history-task-chips {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
+  }
+  .chip {
+    background: var(--surface2);
+    border-radius: 100px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .chip.done { color: var(--accent); background: rgba(200,240,110,0.08); }
+  .history-note {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+    margin-top: 8px;
+  }
+  .history-energy-bar {
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 100px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .history-energy-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--danger), var(--accent2), var(--accent));
+  }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+  }
+  .empty-state .big { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* STATS PAGE */
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; padding: 16px 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .stat-card.wide { grid-column: 1 / -1; }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .emotion-freq {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+  }
+  .emotion-freq-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px;
+  }
+  .week-chart {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 60px; margin-top: 10px;
+  }
+  .week-bar-wrap {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .week-bar {
+    width: 100%; border-radius: 4px 4px 0 0;
+    background: var(--accent);
+    opacity: 0.7;
+    min-height: 3px;
+    transition: height 0.5s ease;
+  }
+  .week-bar-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+
+  /* DETAIL MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    display: none;
+    align-items: flex-end;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 100px;
+    margin: 0 auto 20px;
+  }
+  .modal-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .modal-emotion-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .modal-emotion-big { font-size: 36px; }
+  .modal-emotion-name { font-size: 18px; font-weight: 600; }
+  .modal-section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+  }
+  .modal-task-list { display: flex; flex-direction: column; gap: 8px; }
+  .modal-task-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px;
+  }
+  .modal-note {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .del-entry-btn {
+    display: block; width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: rgba(240,110,110,0.1);
+    border: 1px solid rgba(240,110,110,0.3);
+    border-radius: 12px;
+    color: var(--danger);
+    font-family: 'Noto Sans HK', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- TODAY PAGE -->
+<div class="page active" id="page-today">
+  <div class="header">
+    <div class="header-date" id="today-date-label"></div>
+    <div class="header-title">今日點呀？</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">情緒係點</div>
+    <div class="emotion-grid" id="emotion-grid"></div>
+  </div>
+
+  <div class="section energy-section" style="padding-top:0">
+    <div class="section-label">能量指數</div>
+    <div class="energy-track" id="energy-track">
+      <div class="energy-fill" id="energy-fill" style="width:50%"></div>
+    </div>
+    <div class="energy-labels"><span>😴 低迷</span><span id="energy-val">5</span><span>⚡ 爆發</span></div>
+  </div>
+
+  <div class="section task-section" style="padding-top:0">
+    <div class="section-label">今日做過咩</div>
+    <div class="task-input-row">
+      <input class="task-input" id="task-input" placeholder="加一件事…" maxlength="60">
+      <button class="add-btn" id="add-task-btn">+</button>
+    </div>
+    <div class="task-list" id="task-list"></div>
+  </div>
+
+  <div class="section note-section" style="padding-top:0">
+    <div class="section-label">寫低諗法 / 備注</div>
+    <textarea class="note-input" id="note-input" placeholder="今日有咩發現、感受、或者唔想忘記嘅事…" rows="3"></textarea>
+  </div>
+
+  <button class="save-btn" id="save-btn">💾 儲存今日記錄</button>
+</div>
+
+<!-- HISTORY PAGE -->
+<div class="page" id="page-history">
+  <div class="header">
+    <div class="header-date">LOGBOOK</div>
+    <div class="header-title">歷史記錄</div>
+  </div>
+  <div class="history-list" id="history-list"></div>
+</div>
+
+<!-- STATS PAGE -->
+<div class="page" id="page-stats">
+  <div class="header">
+    <div class="header-date">OVERVIEW</div>
+    <div class="header-title">統計</div>
+  </div>
+  <div class="stats-grid" id="stats-grid"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" data-page="today">
+    <span class="icon">✦</span>今日
+  </button>
+  <button class="nav-btn" data-page="history">
+    <span class="icon">◈</span>記錄
+  </button>
+  <button class="nav-btn" data-page="stats">
+    <span class="icon">◉</span>統計
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content">
+    <div class="modal-handle"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const EMOTIONS = [
+  { emoji:'😄', label:'開心', key:'happy' },
+  { emoji:'😌', label:'平靜', key:'calm' },
+  { emoji:'😤', label:'勁爆', key:'pumped' },
+  { emoji:'😔', label:'低落', key:'sad' },
+  { emoji:'😰', label:'焦慮', key:'anxious' },
+  { emoji:'😡', label:'煩躁', key:'angry' },
+  { emoji:'😴', label:'攰', key:'tired' },
+  { emoji:'🤩', label:'興奮', key:'excited' },
+  { emoji:'😕', label:'迷茫', key:'lost' },
+  { emoji:'🥰', label:'感恩', key:'grateful' },
+];
+
+// STATE
+let state = {
+  emotion: null,
+  energy: 5,
+  tasks: [],
+  note: ''
+};
+
+// STORAGE
+function getAll() {
+  try { return JSON.parse(localStorage.getItem('daily_logs') || '{}'); } catch { return {}; }
+}
+function saveAll(data) {
+  localStorage.setItem('daily_logs', JSON.stringify(data));
+}
+function todayKey() {
+  return new Date().toISOString().slice(0,10);
+}
+function formatDate(key) {
+  const d = new Date(key + 'T00:00:00');
+  const days = ['日','一','二','三','四','五','六'];
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 (星期${days[d.getDay()]})`;
+}
+
+// INIT TODAY
+function initToday() {
+  const key = todayKey();
+  const all = getAll();
+  if (all[key]) {
+    const s = all[key];
+    state.emotion = s.emotion;
+    state.energy = s.energy ?? 5;
+    state.tasks = s.tasks ?? [];
+    state.note = s.note ?? '';
+  } else {
+    state = { emotion: null, energy: 5, tasks: [], note: '' };
+  }
+  renderToday();
+}
+
+// RENDER TODAY
+function renderToday() {
+  document.getElementById('today-date-label').textContent = formatDate(todayKey());
+
+  // emotion grid
+  const grid = document.getElementById('emotion-grid');
+  grid.innerHTML = '';
+  EMOTIONS.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = 'emotion-btn' + (state.emotion === e.key ? ' selected' : '');
+    btn.innerHTML = `${e.emoji}<span class="label">${e.label}</span>`;
+    btn.onclick = () => { state.emotion = e.key; renderToday(); };
+    grid.appendChild(btn);
+  });
+
+  // energy
+  const pct = (state.energy / 10) * 100;
+  document.getElementById('energy-fill').style.width = pct + '%';
+  document.getElementById('energy-val').textContent = state.energy;
+
+  // tasks
+  const tl = document.getElementById('task-list');
+  tl.innerHTML = '';
+  state.tasks.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'task-item';
+    div.innerHTML = `
+      <div class="task-check ${t.done ? 'done' : ''}" data-i="${i}">${t.done ? '✓' : ''}</div>
+      <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
+      <button class="task-del" data-i="${i}">×</button>
+    `;
+    tl.appendChild(div);
+  });
+
+  // note
+  document.getElementById('note-input').value = state.note;
+}
+
+// ENERGY DRAG
+const track = document.getElementById('energy-track');
+function updateEnergy(e) {
+  const rect = track.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const pct = Math.max(0, Math.min(1, x / rect.width));
+  state.energy = Math.round(pct * 10);
+  if (state.energy === 0) state.energy = 1;
+  document.getElementById('energy-fill').style.width = (state.energy / 10 * 100) + '%';
+  document.getElementById('energy-val').textContent = state.energy;
+}
+track.addEventListener('touchstart', updateEnergy, { passive: true });
+track.addEventListener('touchmove', updateEnergy, { passive: true });
+track.addEventListener('mousedown', e => {
+  updateEnergy(e);
+  const mm = ev => updateEnergy(ev);
+  document.addEventListener('mousemove', mm);
+  document.addEventListener('mouseup', () => document.removeEventListener('mousemove', mm), {once:true});
+});
+
+// ADD TASK
+document.getElementById('add-task-btn').onclick = addTask;
+document.getElementById('task-input').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+function addTask() {
+  const inp = document.getElementById('task-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  state.tasks.push({ text: val, done: false });
+  inp.value = '';
+  renderToday();
+}
+
+// TASK ACTIONS (delegate)
+document.getElementById('task-list').addEventListener('click', e => {
+  const chk = e.target.closest('.task-check');
+  const del = e.target.closest('.task-del');
+  if (chk) {
+    const i = +chk.dataset.i;
+    state.tasks[i].done = !state.tasks[i].done;
+    renderToday();
+  }
+  if (del) {
+    const i = +del.dataset.i;
+    state.tasks.splice(i, 1);
+    renderToday();
+  }
+});
+
+// NOTE
+document.getElementById('note-input').addEventListener('input', e => {
+  state.note = e.target.value;
+});
+
+// SAVE
+document.getElementById('save-btn').onclick = () => {
+  const all = getAll();
+  all[todayKey()] = { ...state, savedAt: new Date().toISOString() };
+  saveAll(all);
+  showToast('✓ 儲存咗！');
+};
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// NAV
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const page = btn.dataset.page;
+    document.getElementById('page-' + page).classList.add('active');
+    if (page === 'history') renderHistory();
+    if (page === 'stats') renderStats();
+  };
+});
+
+// HISTORY
+function renderHistory() {
+  const all = getAll();
+  const keys = Object.keys(all).sort().reverse();
+  const el = document.getElementById('history-list');
+  if (keys.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="big">📭</div><p>未有記錄<br>去「今日」tab 儲存第一條記錄啦</p></div>`;
+    return;
+  }
+  el.innerHTML = '';
+  keys.forEach(key => {
+    const entry = all[key];
+    const emo = EMOTIONS.find(e => e.key === entry.emotion);
+    const doneCount = (entry.tasks||[]).filter(t=>t.done).length;
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    const chips = (entry.tasks||[]).slice(0,4).map(t =>
+      `<span class="chip ${t.done?'done':''}">${t.done?'✓ ':''}${t.text}</span>`
+    ).join('');
+    const more = (entry.tasks||[]).length > 4 ? `<span class="chip">+${entry.tasks.length-4}</span>` : '';
+    card.innerHTML = `
+      <div class="history-card-header">
+        <div class="history-card-date">${formatDate(key)}</div>
+        <div class="history-card-emotion">${emo ? emo.emoji : '—'}</div>
+      </div>
+      <div class="history-card-body">
+        <div class="history-task-chips">${chips}${more}</div>
+        ${entry.note ? `<div class="history-note">${entry.note.slice(0,80)}${entry.note.length>80?'…':''}</div>` : ''}
+        <div class="history-energy-bar"><div class="history-energy-fill" style="width:${(entry.energy||5)/10*100}%"></div></div>
+      </div>
+    `;
+    card.onclick = () => openModal(key, entry);
+    el.appendChild(card);
+  });
+}
+
+// MODAL
+function openModal(key, entry) {
+  const emo = EMOTIONS.find(e => e.key === entry.emotion);
+  let tasksHtml = (entry.tasks||[]).map(t =>
+    `<div class="modal-task-item"><span>${t.done?'✅':'⬜'}</span><span>${t.text}</span></div>`
+  ).join('');
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-date">${formatDate(key)}</div>
+    <div class="modal-emotion-row">
+      <span class="modal-emotion-big">${emo ? emo.emoji : '—'}</span>
+      <span class="modal-emotion-name">${emo ? emo.label : '未揀'}</span>
+      <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:13px;color:var(--accent)">⚡ ${entry.energy||5}/10</span>
+    </div>
+    ${tasksHtml ? `<div class="modal-section-title">做過</div><div class="modal-task-list">${tasksHtml}</div>` : ''}
+    ${entry.note ? `<div class="modal-section-title">備注</div><div class="modal-note">${entry.note}</div>` : ''}
+    <button class="del-entry-btn" data-key="${key}">🗑 刪除此記錄</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.querySelector('.del-entry-btn').onclick = () => {
+    const all = getAll();
+    delete all[key];
+    saveAll(all);
+    closeModal();
+    renderHistory();
+    showToast('已刪除');
+  };
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-overlay').onclick = e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+};
+
+// STATS
+function renderStats() {
+  const all = getAll();
+  const keys = Object.keys(all);
+  const el = document.getElementById('stats-grid');
+  if (keys.length === 0) {
+    el.innerHTML = `<div class="stat-card wide"><div class="empty-state"><div class="big">📊</div><p>未有足夠數據</p></div></div>`;
+    return;
+  }
+  const totalDays = keys.length;
+  const totalTasks = keys.reduce((s,k) => s + (all[k].tasks||[]).length, 0);
+  const doneTasks = keys.reduce((s,k) => s + (all[k].tasks||[]).filter(t=>t.done).length, 0);
+  const avgEnergy = (keys.reduce((s,k) => s + (all[k].energy||5), 0) / totalDays).toFixed(1);
+
+  // emotion freq
+  const emoCount = {};
+  keys.forEach(k => { const e = all[k].emotion; if(e) emoCount[e] = (emoCount[e]||0)+1; });
+  const topEmos = Object.entries(emoCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const emoHtml = topEmos.map(([key, cnt]) => {
+    const e = EMOTIONS.find(x=>x.key===key);
+    return `<div class="emotion-freq-item">${e?e.emoji:''} <span style="color:var(--text-dim)">${cnt}日</span></div>`;
+  }).join('');
+
+  // week chart (last 7 entries)
+  const last7 = keys.sort().slice(-7);
+  const maxT = Math.max(...last7.map(k=>(all[k].tasks||[]).length), 1);
+  const weekHtml = last7.map(k => {
+    const cnt = (all[k].tasks||[]).length;
+    const h = Math.max(4, (cnt/maxT)*50);
+    const d = new Date(k+'T00:00:00');
+    const wd = ['日','一','二','三','四','五','六'][d.getDay()];
+    return `<div class="week-bar-wrap"><div class="week-bar" style="height:${h}px"></div><span class="week-bar-label">${wd}</span></div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-num">${totalDays}</div>
+      <div class="stat-label">記錄日數</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">${avgEnergy}</div>
+      <div class="stat-label">平均能量</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">${doneTasks}</div>
+      <div class="stat-label">完成事項</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">${totalTasks > 0 ? Math.round(doneTasks/totalTasks*100) : 0}%</div>
+      <div class="stat-label">完成率</div>
+    </div>
+    <div class="stat-card wide">
+      <div class="section-label" style="margin-bottom:8px">常見情緒</div>
+      <div class="emotion-freq">${emoHtml || '—'}</div>
+    </div>
+    <div class="stat-card wide">
+      <div class="section-label" style="margin-bottom:4px">近7日 任務量</div>
+      <div class="week-chart">${weekHtml}</div>
+    </div>
+  `;
+}
+
+// BOOT
+initToday();
+</script>
+</body>
+</html>
