@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
@@ -7,847 +8,1728 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="今日點呀">
-<meta name="theme-color" content="#0f0f0f">
-<title>今日點呀</title>
+<meta name="theme-color" content="#adb5bd">
 <link rel="apple-touch-icon" href="icon.png.jpg">
+<title>今日點呀</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
 
-  :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #242424;
-    --border: #2e2e2e;
-    --accent: #c8f06e;
-    --accent2: #f0a06e;
-    --accent3: #6ec8f0;
-    --text: #f0ede8;
-    --text-dim: #7a7772;
-    --danger: #f06e6e;
-  }
+:root {
+–bg: #adb5bd;
+–surface: #f5f5f5;
+–surface2: #c8cdd2;
+–border: #9aa0a6;
+–accent: #5a9e1a;
+–accent2: #d4771a;
+–accent3: #1a8ab5;
+–purple: #8b4fcf;
+–pink: #d94f82;
+–green: #3a9e50;
+–text: #0d0d0d;
+–text-dim: #555555;
+–danger: #d44;
+–joy: #c49a00;
+–anger: #d44;
+–sadness: #1a8ab5;
+–fear: #8b4fcf;
+–surprise: #c47a00;
+–disgust: #3a9e50;
+–complex: #d94f82;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans HK', sans-serif;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    overscroll-behavior: none;
-  }
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘Noto Sans HK’, sans-serif;
+min-height: 100vh;
+overscroll-behavior: none;
+font-size: 130%;
+}
 
-  /* NAV */
-  .nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .nav-btn {
-    flex: 1; padding: 14px 0 10px;
-    background: none; border: none; cursor: pointer;
-    color: var(--text-dim);
-    font-family: 'Noto Sans HK', sans-serif;
-    font-size: 10px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    transition: color 0.2s;
-  }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn .icon { font-size: 22px; line-height: 1; }
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 0; }
 
-  /* PAGES */
-  .page { display: none; padding: 0 0 80px; min-height: 100vh; }
-  .page.active { display: block; }
+/* NAV */
+.nav {
+position: fixed; bottom: 0; left: 0; right: 0;
+background: var(–surface);
+border-top: 1px solid var(–border);
+display: flex; z-index: 100;
+padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-btn {
+flex: 1; padding: 12px 0 8px;
+background: none; border: none; cursor: pointer;
+color: var(–text-dim);
+font-family: ‘Noto Sans HK’, sans-serif;
+font-size: 13px;
+display: flex; flex-direction: column; align-items: center; gap: 3px;
+transition: color 0.2s;
+}
+.nav-btn.active { color: var(–accent); }
+.nav-btn .icon { font-size: 20px; line-height: 1; }
 
-  /* HEADER */
-  .header {
-    padding: 56px 20px 20px;
-    position: sticky; top: 0;
-    background: var(--bg);
-    z-index: 50;
-    border-bottom: 1px solid var(--border);
-  }
-  .header-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .header-title {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
+/* PAGES */
+.page { display: none; padding-bottom: 80px; min-height: 100vh; }
+.page.active { display: block; }
 
-  /* TODAY PAGE */
-  .section { padding: 20px; }
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-  }
+/* HEADER */
+.header {
+padding: 52px 20px 16px;
+position: sticky; top: 0;
+background: var(–bg);
+z-index: 50;
+border-bottom: 1px solid var(–border);
+}
+.header-sub {
+font-family: ‘Space Mono’, monospace;
+font-size: 14px; color: var(–text-dim);
+letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 3px;
+}
+.header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 
-  /* EMOTION PICKER */
-  .emotion-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .emotion-btn {
-    aspect-ratio: 1;
-    background: var(--surface);
-    border: 2px solid transparent;
-    border-radius: 16px;
-    cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px;
-    transition: all 0.15s;
-    font-size: 26px;
-    padding: 6px 0;
-  }
-  .emotion-btn span.label {
-    font-size: 9px;
-    color: var(--text-dim);
-    font-family: 'Space Mono', monospace;
-  }
-  .emotion-btn.selected {
-    border-color: var(--accent);
-    background: rgba(200,240,110,0.08);
-  }
-  .emotion-btn:active { transform: scale(0.93); }
+/* SECTION */
+.section { padding: 20px; }
+.section + .section { padding-top: 0; }
+.sec-label {
+font-family: ‘Space Mono’, monospace;
+font-size: 14px; letter-spacing: 0.2em;
+text-transform: uppercase; color: var(–text-dim);
+margin-bottom: 12px;
+}
 
-  /* ENERGY BAR */
-  .energy-section { margin-top: 24px; }
-  .energy-track {
-    background: var(--surface);
-    border-radius: 100px;
-    height: 8px;
-    margin: 10px 0;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .energy-fill {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--danger), var(--accent2), var(--accent));
-    transition: width 0.3s;
-  }
-  .energy-labels {
-    display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--text-dim);
-    font-family: 'Space Mono', monospace;
-  }
+/* CHECKIN TOGGLE */
+.checkin-tabs {
+display: flex; gap: 8px; margin-bottom: 20px;
+}
+.checkin-tab {
+flex: 1; padding: 10px;
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; cursor: pointer; color: var(–text-dim);
+font-family: ‘Noto Sans HK’, sans-serif; font-size: 13px;
+transition: all 0.2s; text-align: center;
+}
+.checkin-tab.active {
+border-color: var(–accent); color: var(–accent);
+background: rgba(90,158,26,0.08);
+}
 
-  /* TASK INPUT */
-  .task-section { margin-top: 24px; }
-  .task-input-row {
-    display: flex; gap: 8px; margin-bottom: 12px;
-  }
-  .task-input {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-family: 'Noto Sans HK', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .task-input:focus { border-color: var(--accent); }
-  .task-input::placeholder { color: var(--text-dim); }
-  .add-btn {
-    width: 46px; height: 46px;
-    background: var(--accent);
-    border: none; border-radius: 12px;
-    color: #0f0f0f; font-size: 22px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.15s;
-  }
-  .add-btn:active { transform: scale(0.92); }
+/* EMOTION CATEGORIES */
+.emo-cats {
+display: flex; flex-wrap: wrap; gap: 8px;
+margin-bottom: 16px;
+justify-content: flex-start;
+}
+.emo-cat-btn {
+width: calc(25% - 6px);
+padding: 10px 4px;
+background: var(–surface); border: 2px solid transparent;
+border-radius: 12px; cursor: pointer;
+display: flex; flex-direction: column; align-items: center; gap: 4px;
+transition: all 0.15s; font-size: 22px;
+box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.emo-cat-btn span { font-size: 14px; color: var(–text-dim); font-family: ‘Space Mono’, monospace; }
+.emo-cat-btn.selected { border-color: currentColor; background: rgba(0,0,0,0.04); }
+.emo-cat-btn.joy   { color: #c49a00; background: #fffbea; }
+.emo-cat-btn.joy.selected { background: #fff3c0; }
+.emo-cat-btn.anger { color: #cc3333; background: #fff0f0; }
+.emo-cat-btn.anger.selected { background: #ffd6d6; }
+.emo-cat-btn.sadness { color: #1a7ab5; background: #eef6fc; }
+.emo-cat-btn.sadness.selected { background: #cce5f5; }
+.emo-cat-btn.fear  { color: #7b3fbf; background: #f5eeff; }
+.emo-cat-btn.fear.selected { background: #e4d0f8; }
+.emo-cat-btn.surprise { color: #c47a00; background: #fff5e6; }
+.emo-cat-btn.surprise.selected { background: #ffe0b0; }
+.emo-cat-btn.disgust { color: #2e8c45; background: #edf8f0; }
+.emo-cat-btn.disgust.selected { background: #c8ead0; }
+.emo-cat-btn.complex { color: #c0306e; background: #fff0f5; }
+.emo-cat-btn.complex.selected { background: #ffd0e4; }
+.emo-cat-btn:active { transform: scale(0.93); }
 
-  /* TASK LIST */
-  .task-list { display: flex; flex-direction: column; gap: 8px; }
-  .task-item {
-    background: var(--surface);
-    border-radius: 12px;
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 12px;
-    animation: slideIn 0.2s ease;
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .task-check {
-    width: 22px; height: 22px;
-    border: 2px solid var(--border);
-    border-radius: 50%;
-    cursor: pointer;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-    font-size: 12px;
-  }
-  .task-check.done {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #0f0f0f;
-  }
-  .task-text {
-    flex: 1; font-size: 15px;
-    transition: all 0.2s;
-  }
-  .task-text.done {
-    text-decoration: line-through;
-    color: var(--text-dim);
-  }
-  .task-del {
-    background: none; border: none;
-    color: var(--text-dim); font-size: 18px;
-    cursor: pointer; padding: 2px 4px;
-    line-height: 1;
-  }
+/* EMOTION DETAIL */
+.emo-detail {
+background: var(–surface); border-radius: 14px;
+padding: 14px; margin-bottom: 16px;
+display: none;
+}
+.emo-detail.show { display: block; }
+.emo-detail-title {
+font-size: 11px; color: var(–text-dim);
+font-family: ‘Space Mono’, monospace;
+margin-bottom: 10px; letter-spacing: 0.1em;
+}
+.emo-chips {
+display: flex; flex-wrap: wrap; gap: 8px;
+}
+.emo-chip {
+padding: 6px 12px;
+background: var(–surface2); border: 1px solid var(–border);
+border-radius: 100px; cursor: pointer;
+font-size: 13px; transition: all 0.15s;
+}
+.emo-chip.selected {
+border-color: var(–accent); color: var(–accent);
+background: rgba(90,158,26,0.08);
+}
 
-  /* NOTE */
-  .note-section { margin-top: 24px; }
-  .note-input {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: var(--text);
-    font-family: 'Noto Sans HK', sans-serif;
-    font-size: 15px;
-    outline: none;
-    resize: none;
-    min-height: 90px;
-    line-height: 1.6;
-    transition: border-color 0.2s;
-  }
-  .note-input:focus { border-color: var(--accent3); }
-  .note-input::placeholder { color: var(--text-dim); }
+/* INTENSITY */
+.intensity-row {
+display: flex; gap: 8px; margin-bottom: 16px;
+}
+.intensity-btn {
+flex: 1; padding: 8px 4px;
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; cursor: pointer; color: var(–text-dim);
+font-size: 11px; text-align: center;
+font-family: ‘Noto Sans HK’, sans-serif;
+transition: all 0.15s;
+}
+.intensity-btn.selected {
+border-color: var(–accent); color: var(–accent);
+background: rgba(90,158,26,0.08);
+}
 
-  /* SAVE BTN */
-  .save-btn {
-    display: block;
-    width: calc(100% - 40px);
-    margin: 20px 20px 0;
-    padding: 16px;
-    background: var(--accent);
-    border: none; border-radius: 14px;
-    color: #0f0f0f;
-    font-family: 'Noto Sans HK', sans-serif;
-    font-weight: 700; font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.15s, opacity 0.15s;
-    letter-spacing: 0.02em;
-  }
-  .save-btn:active { transform: scale(0.97); opacity: 0.85; }
+/* REASON INPUT */
+.reason-input {
+width: 100%;
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 12px; padding: 12px 14px;
+color: var(–text); font-family: ‘Noto Sans HK’, sans-serif;
+font-size: 14px; outline: none; resize: none;
+line-height: 1.6; transition: border-color 0.2s;
+}
+.reason-input:focus { border-color: var(–accent); }
+.reason-input::placeholder { color: var(–text-dim); }
 
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(10px);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 10px 20px;
-    border-radius: 100px;
-    font-size: 13px;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 200;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* FEEL BETTER */
+.feel-better-card {
+background: linear-gradient(135deg, rgba(139,79,207,0.08), rgba(217,79,130,0.08));
+border: 1px solid rgba(139,79,207,0.2);
+border-radius: 14px; padding: 16px; margin-bottom: 16px;
+}
+.feel-better-title { font-size: 13px; color: var(–purple); margin-bottom: 10px; font-weight: 600; }
+.feel-better-list { display: flex; flex-direction: column; gap: 6px; }
+.feel-better-item { font-size: 13px; color: var(–text-dim); display: flex; gap: 8px; }
+.feel-better-item::before { content: ‘✦’; color: var(–purple); flex-shrink: 0; }
 
-  /* HISTORY PAGE */
-  .history-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
-  .history-card {
-    background: var(--surface);
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .history-card:active { background: var(--surface2); }
-  .history-card-header {
-    padding: 14px 16px 10px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .history-card-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .history-card-emotion { font-size: 22px; }
-  .history-card-body { padding: 0 16px 14px; }
-  .history-task-chips {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
-  }
-  .chip {
-    background: var(--surface2);
-    border-radius: 100px;
-    padding: 4px 10px;
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .chip.done { color: var(--accent); background: rgba(200,240,110,0.08); }
-  .history-note {
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.5;
-    border-left: 2px solid var(--border);
-    padding-left: 10px;
-    margin-top: 8px;
-  }
-  .history-energy-bar {
-    height: 3px;
-    background: var(--surface2);
-    border-radius: 100px;
-    margin-top: 10px;
-    overflow: hidden;
-  }
-  .history-energy-fill {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--danger), var(--accent2), var(--accent));
-  }
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-dim);
-  }
-  .empty-state .big { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; line-height: 1.6; }
+/* ENERGY */
+.energy-track {
+background: var(–surface); border-radius: 100px;
+height: 8px; cursor: pointer; position: relative; overflow: hidden;
+margin: 10px 0;
+}
+.energy-fill {
+height: 100%; border-radius: 100px;
+background: linear-gradient(90deg, var(–danger), var(–accent2), var(–accent));
+transition: width 0.2s;
+}
+.energy-labels {
+display: flex; justify-content: space-between;
+font-size: 14px; color: var(–text-dim);
+font-family: ‘Space Mono’, monospace;
+}
 
-  /* STATS PAGE */
-  .stats-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px; padding: 16px 20px;
-  }
-  .stat-card {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 16px;
-  }
-  .stat-card.wide { grid-column: 1 / -1; }
-  .stat-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .emotion-freq {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
-  }
-  .emotion-freq-item {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 13px;
-  }
-  .week-chart {
-    display: flex; align-items: flex-end; gap: 6px;
-    height: 60px; margin-top: 10px;
-  }
-  .week-bar-wrap {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
-  .week-bar {
-    width: 100%; border-radius: 4px 4px 0 0;
-    background: var(--accent);
-    opacity: 0.7;
-    min-height: 3px;
-    transition: height 0.5s ease;
-  }
-  .week-bar-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: var(--text-dim);
-  }
+/* MIT TASKS */
+.mit-list { display: flex; flex-direction: column; gap: 8px; }
+.mit-item {
+background: var(–surface); border-radius: 12px;
+padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+}
+.mit-num {
+width: 28px; height: 28px; border-radius: 50%;
+background: var(–accent); color: #ffffff;
+font-size: 14px; font-weight: 700;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0; font-family: ‘Space Mono’, monospace;
+}
+.mit-input {
+flex: 1; background: none; border: none;
+color: var(–text); font-family: ‘Noto Sans HK’, sans-serif;
+font-size: 14px; outline: none;
+}
+.mit-input::placeholder { color: var(–text-dim); }
+.mit-check {
+width: 22px; height: 22px; border: 2px solid var(–border);
+border-radius: 50%; cursor: pointer; flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; transition: all 0.2s;
+}
+.mit-check.done { background: var(–accent); border-color: var(–accent); color: #ffffff; }
 
-  /* DETAIL MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 300;
-    display: none;
-    align-items: flex-end;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: 20px 20px 0 0;
-    width: 100%;
-    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: slideUp 0.25s ease;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .modal-handle {
-    width: 36px; height: 4px;
-    background: var(--border);
-    border-radius: 100px;
-    margin: 0 auto 20px;
-  }
-  .modal-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-  .modal-emotion-row {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px;
-  }
-  .modal-emotion-big { font-size: 36px; }
-  .modal-emotion-name { font-size: 18px; font-weight: 600; }
-  .modal-section-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin: 16px 0 8px;
-  }
-  .modal-task-list { display: flex; flex-direction: column; gap: 8px; }
-  .modal-task-item {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 15px;
-  }
-  .modal-note {
-    font-size: 14px; line-height: 1.7;
-    color: var(--text-dim);
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 12px;
-  }
-  .del-entry-btn {
-    display: block; width: 100%;
-    margin-top: 20px;
-    padding: 14px;
-    background: rgba(240,110,110,0.1);
-    border: 1px solid rgba(240,110,110,0.3);
-    border-radius: 12px;
-    color: var(--danger);
-    font-family: 'Noto Sans HK', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-  }
+/* TIME LOG */
+.timelog-list { display: flex; flex-direction: column; gap: 8px; }
+.timelog-item {
+background: var(–surface); border-radius: 12px;
+padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+animation: slideIn 0.2s ease;
+}
+.timelog-time {
+font-family: ‘Space Mono’, monospace; font-size: 12px;
+color: var(–accent3); flex-shrink: 0; min-width: 45px;
+}
+.timelog-text { flex: 1; font-size: 14px; }
+.timelog-del {
+background: none; border: none; color: var(–text-dim);
+font-size: 16px; cursor: pointer; padding: 2px 4px;
+}
+.timelog-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.time-inp {
+width: 90px; background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; padding: 10px 10px; color: var(–text);
+font-family: ‘Space Mono’, monospace; font-size: 13px; outline: none;
+-webkit-appearance: none;
+}
+.act-inp {
+flex: 1; background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; padding: 10px 12px; color: var(–text);
+font-family: ‘Noto Sans HK’, sans-serif; font-size: 14px; outline: none;
+}
+.act-inp::placeholder { color: var(–text-dim); }
+.add-btn {
+width: 44px; height: 44px; background: var(–accent);
+border: none; border-radius: 10px; color: #ffffff;
+font-size: 20px; font-weight: 700; cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0; transition: transform 0.15s;
+}
+.add-btn:active { transform: scale(0.92); }
+
+/* NOTE */
+.note-inp {
+width: 100%; background: var(–surface); border: 1px solid var(–border);
+border-radius: 12px; padding: 12px 14px; color: var(–text);
+font-family: ‘Noto Sans HK’, sans-serif; font-size: 14px;
+outline: none; resize: none; min-height: 80px; line-height: 1.6;
+transition: border-color 0.2s;
+}
+.note-inp:focus { border-color: var(–accent3); }
+.note-inp::placeholder { color: var(–text-dim); }
+
+/* SAVE BTN */
+.save-btn {
+display: block; width: calc(100% - 40px);
+margin: 16px 20px 0; padding: 15px;
+background: var(–accent); border: none; border-radius: 14px;
+color: #ffffff; font-family: ‘Noto Sans HK’, sans-serif;
+font-weight: 700; font-size: 15px; cursor: pointer;
+transition: transform 0.15s, opacity 0.15s;
+}
+.save-btn:active { transform: scale(0.97); opacity: 0.85; }
+
+/* GOALS PAGE */
+.goal-card {
+background: var(–surface); border-radius: 16px;
+padding: 16px; margin-bottom: 12px;
+}
+.goal-card-header {
+display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.goal-badge {
+padding: 4px 10px; border-radius: 100px;
+font-family: ‘Space Mono’, monospace; font-size: 10px;
+letter-spacing: 0.1em;
+}
+.badge-3m { background: rgba(199,125,255,0.15); color: var(–purple); }
+.badge-1m { background: rgba(110,200,240,0.15); color: var(–accent3); }
+.goal-inp {
+width: 100%; background: var(–surface2); border: 1px solid var(–border);
+border-radius: 10px; padding: 10px 12px; color: var(–text);
+font-family: ‘Noto Sans HK’, sans-serif; font-size: 14px; outline: none;
+margin-bottom: 8px; transition: border-color 0.2s;
+}
+.goal-inp:focus { border-color: var(–accent); }
+.goal-inp::placeholder { color: var(–text-dim); }
+.goal-progress {
+display: flex; align-items: center; gap: 10px; margin-top: 8px;
+}
+.goal-track {
+flex: 1; height: 6px; background: var(–surface2);
+border-radius: 100px; overflow: hidden;
+}
+.goal-fill {
+height: 100%; border-radius: 100px;
+background: var(–accent); transition: width 0.3s;
+}
+.goal-pct {
+font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–text-dim);
+min-width: 30px; text-align: right;
+}
+.pct-btn {
+background: var(–surface2); border: 1px solid var(–border);
+border-radius: 8px; padding: 4px 8px; color: var(–text-dim);
+font-size: 12px; cursor: pointer;
+}
+
+/* REVIEW PAGE */
+.date-picker-row {
+display: flex; gap: 8px; align-items: center; margin-bottom: 16px;
+}
+.date-inp {
+flex: 1; background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; padding: 10px 12px; color: var(–text);
+font-family: ‘Space Mono’, monospace; font-size: 13px; outline: none;
+-webkit-appearance: none;
+}
+.go-btn {
+padding: 10px 16px; background: var(–accent);
+border: none; border-radius: 10px; color: #ffffff;
+font-weight: 700; font-size: 13px; cursor: pointer;
+white-space: nowrap;
+}
+
+/* WEEKLY REVIEW */
+.week-nav {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 16px;
+}
+.week-nav-btn {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 10px; padding: 8px 14px; color: var(–text);
+font-size: 16px; cursor: pointer;
+}
+.week-label {
+font-family: ‘Space Mono’, monospace; font-size: 14px; color: var(–text-dim);
+text-align: center;
+}
+.week-days { display: flex; flex-direction: column; gap: 8px; }
+.week-day-item {
+background: var(–surface); border-radius: 12px;
+padding: 12px 14px; cursor: pointer; transition: background 0.15s;
+}
+.week-day-item:active { background: var(–surface2); }
+.week-day-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 4px;
+}
+.week-day-name {
+font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–text-dim);
+}
+.week-day-emo { font-size: 18px; }
+.week-day-tasks { font-size: 12px; color: var(–text-dim); }
+.no-entry { color: var(–text-dim); font-size: 13px; font-style: italic; }
+
+/* ANALYSIS PAGE */
+.chart-card {
+background: var(–surface); border-radius: 16px;
+padding: 16px; margin-bottom: 12px;
+}
+.chart-title {
+font-family: ‘Space Mono’, monospace; font-size: 14px;
+letter-spacing: 0.15em; text-transform: uppercase;
+color: var(–text-dim); margin-bottom: 14px;
+}
+
+/* EMOTION TREND CHART */
+.trend-chart {
+display: flex; align-items: flex-end; gap: 3px; height: 80px;
+overflow-x: auto; padding-bottom: 4px;
+}
+.trend-bar-wrap {
+display: flex; flex-direction: column; align-items: center; gap: 3px;
+min-width: 28px;
+}
+.trend-bar {
+width: 20px; border-radius: 4px 4px 0 0; min-height: 4px;
+transition: height 0.4s ease;
+}
+.trend-bar-label {
+font-family: ‘Space Mono’, monospace; font-size: 8px; color: var(–text-dim);
+}
+
+/* TRIGGER ANALYSIS */
+.trigger-list { display: flex; flex-direction: column; gap: 8px; }
+.trigger-item {
+display: flex; align-items: center; gap: 10px;
+}
+.trigger-bar-wrap { flex: 1; }
+.trigger-label { font-size: 16px; min-width: 80px; }
+.trigger-track {
+height: 6px; background: var(–surface2);
+border-radius: 100px; overflow: hidden; margin-top: 3px;
+}
+.trigger-fill { height: 100%; border-radius: 100px; }
+.trigger-count {
+font-family: ‘Space Mono’, monospace; font-size: 11px;
+color: var(–text-dim); min-width: 20px; text-align: right;
+}
+
+/* CORRELATION */
+.correlation-grid {
+display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.corr-item {
+background: var(–surface2); border-radius: 10px; padding: 12px;
+text-align: center;
+}
+.corr-num {
+font-family: ‘Space Mono’, monospace; font-size: 24px;
+font-weight: 700; color: var(–accent); margin-bottom: 3px;
+}
+.corr-label { font-size: 14px; color: var(–text-dim); }
+
+/* MONTHLY SUMMARY */
+.month-summary {
+background: linear-gradient(135deg, rgba(90,158,26,0.06), rgba(26,138,181,0.06));
+border: 1px solid var(–border); border-radius: 14px;
+padding: 16px; margin-bottom: 12px;
+}
+.month-summary-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.month-summary-text { font-size: 13px; color: var(–text-dim); line-height: 1.7; }
+
+/* PRODUCTIVITY PEAK */
+.peak-chart {
+display: flex; align-items: flex-end; gap: 4px; height: 60px;
+}
+.peak-bar-wrap {
+flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.peak-bar {
+width: 100%; border-radius: 3px 3px 0 0;
+background: var(–accent3); min-height: 2px; opacity: 0.7;
+}
+.peak-label {
+font-family: ‘Space Mono’, monospace; font-size: 8px; color: var(–text-dim);
+}
+
+/* TOAST */
+.toast {
+position: fixed; bottom: 90px; left: 50%;
+transform: translateX(-50%) translateY(10px);
+background: var(–surface2); border: 1px solid var(–border);
+padding: 10px 20px; border-radius: 100px; font-size: 13px;
+opacity: 0; transition: all 0.3s; pointer-events: none;
+white-space: nowrap; z-index: 200;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* MODAL */
+.modal-overlay {
+position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+z-index: 300; display: none; align-items: flex-end;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+background: var(–surface); border-radius: 20px 20px 0 0;
+width: 100%; padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+max-height: 85vh; overflow-y: auto;
+animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+from { transform: translateY(100%); }
+to { transform: translateY(0); }
+}
+@keyframes slideIn {
+from { opacity: 0; transform: translateY(-6px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.modal-handle {
+width: 36px; height: 4px; background: var(–border);
+border-radius: 100px; margin: 0 auto 18px;
+}
+
+/* TABS inside pages */
+.sub-tabs {
+display: flex; gap: 6px; padding: 0 20px 16px; overflow-x: auto;
+}
+.sub-tab {
+padding: 7px 14px; background: var(–surface);
+border: 1px solid var(–border); border-radius: 100px;
+color: var(–text-dim); font-size: 16px; cursor: pointer;
+white-space: nowrap; transition: all 0.15s;
+font-family: ‘Noto Sans HK’, sans-serif;
+}
+.sub-tab.active {
+border-color: var(–accent); color: var(–accent);
+background: rgba(90,158,26,0.08);
+}
+
+.empty-state {
+text-align: center; padding: 50px 20px; color: var(–text-dim);
+}
+.empty-state .big { font-size: 44px; margin-bottom: 10px; }
+.empty-state p { font-size: 13px; line-height: 1.6; }
 </style>
+
 </head>
 <body>
 
 <!-- TODAY PAGE -->
+
 <div class="page active" id="page-today">
   <div class="header">
-    <div class="header-date" id="today-date-label"></div>
+    <div class="header-sub" id="today-date-label"></div>
     <div class="header-title">今日點呀？</div>
   </div>
 
   <div class="section">
-    <div class="section-label">情緒係點</div>
-    <div class="emotion-grid" id="emotion-grid"></div>
-  </div>
-
-  <div class="section energy-section" style="padding-top:0">
-    <div class="section-label">能量指數</div>
-    <div class="energy-track" id="energy-track">
-      <div class="energy-fill" id="energy-fill" style="width:50%"></div>
+    <div class="checkin-tabs">
+      <button class="checkin-tab active" onclick="switchCheckin('morning')">🌅 早上 Check In</button>
+      <button class="checkin-tab" onclick="switchCheckin('evening')">🌙 晚上 Check Out</button>
     </div>
-    <div class="energy-labels"><span>😴 低迷</span><span id="energy-val">5</span><span>⚡ 爆發</span></div>
   </div>
 
-  <div class="section task-section" style="padding-top:0">
-    <div class="section-label">今日做過咩</div>
-    <div class="task-input-row">
-      <input class="task-input" id="task-input" placeholder="加一件事…" maxlength="60">
-      <button class="add-btn" id="add-task-btn">+</button>
+  <!-- MORNING -->
+
+  <div id="morning-section">
+    <div class="section" style="padding-top:0">
+      <div class="sec-label">今日情緒</div>
+      <div class="emo-cats" id="emo-cats-morning"></div>
+      <div class="emo-detail" id="emo-detail-morning">
+        <div class="emo-detail-title">強度</div>
+        <div class="intensity-row" id="intensity-morning"></div>
+        <div class="emo-detail-title" style="margin-top:10px">細項</div>
+        <div class="emo-chips" id="emo-chips-morning"></div>
+      </div>
+      <textarea class="reason-input" id="reason-morning" placeholder="係咩令你有呢個感受？（原因、觸發器）" rows="2" style="margin-top:10px"></textarea>
     </div>
-    <div class="task-list" id="task-list"></div>
-  </div>
 
-  <div class="section note-section" style="padding-top:0">
-    <div class="section-label">寫低諗法 / 備注</div>
-    <textarea class="note-input" id="note-input" placeholder="今日有咩發現、感受、或者唔想忘記嘅事…" rows="3"></textarea>
+```
+<div class="section" style="padding-top:0">
+  <div class="sec-label">能量指數</div>
+  <div class="energy-track" id="energy-track-morning">
+    <div class="energy-fill" id="energy-fill-morning" style="width:50%"></div>
   </div>
-
-  <button class="save-btn" id="save-btn">💾 儲存今日記錄</button>
+  <div class="energy-labels"><span>😴 低迷</span><span id="energy-val-morning">5</span><span>⚡ 爆發</span></div>
 </div>
 
-<!-- HISTORY PAGE -->
-<div class="page" id="page-history">
-  <div class="header">
-    <div class="header-date">LOGBOOK</div>
-    <div class="header-title">歷史記錄</div>
-  </div>
-  <div class="history-list" id="history-list"></div>
+<div class="section" style="padding-top:0">
+  <div class="sec-label">今日3個最重要任務 MIT</div>
+  <div class="mit-list" id="mit-list"></div>
 </div>
 
-<!-- STATS PAGE -->
-<div class="page" id="page-stats">
-  <div class="header">
-    <div class="header-date">OVERVIEW</div>
-    <div class="header-title">統計</div>
+<div class="section" style="padding-top:0">
+  <div class="sec-label">早上備注</div>
+  <textarea class="note-inp" id="note-morning" placeholder="今日想完成咩？有咩期望？" rows="2"></textarea>
+</div>
+```
+
   </div>
-  <div class="stats-grid" id="stats-grid"></div>
+
+  <!-- EVENING -->
+
+  <div id="evening-section" style="display:none">
+    <div class="section" style="padding-top:0">
+      <div class="sec-label">晚上情緒</div>
+      <div class="emo-cats" id="emo-cats-evening"></div>
+      <div class="emo-detail" id="emo-detail-evening">
+        <div class="emo-detail-title">強度</div>
+        <div class="intensity-row" id="intensity-evening"></div>
+        <div class="emo-detail-title" style="margin-top:10px">細項</div>
+        <div class="emo-chips" id="emo-chips-evening"></div>
+      </div>
+      <textarea class="reason-input" id="reason-evening" placeholder="今日情緒嘅主要原因…" rows="2" style="margin-top:10px"></textarea>
+    </div>
+
+```
+<div class="section" style="padding-top:0">
+  <div class="sec-label">能量指數</div>
+  <div class="energy-track" id="energy-track-evening">
+    <div class="energy-fill" id="energy-fill-evening" style="width:50%"></div>
+  </div>
+  <div class="energy-labels"><span>😴 低迷</span><span id="energy-val-evening">5</span><span>⚡ 爆發</span></div>
+</div>
+
+<div class="section" style="padding-top:0">
+  <div class="sec-label">時間記錄</div>
+  <div class="timelog-input-row">
+    <input type="time" class="time-inp" id="timelog-time">
+    <input type="text" class="act-inp" id="timelog-act" placeholder="做緊咩…">
+    <button class="add-btn" onclick="addTimeLog()">+</button>
+  </div>
+  <div class="timelog-list" id="timelog-list"></div>
+</div>
+
+<div class="section" style="padding-top:0">
+  <div class="sec-label">今日回顧</div>
+  <textarea class="note-inp" id="note-evening" placeholder="今日做到咩？有咩發現？明日想改善咩？" rows="3"></textarea>
+</div>
+```
+
+  </div>
+
+<button class="save-btn" onclick="saveToday()">💾 儲存今日記錄</button>
+
+</div>
+
+<!-- GOALS PAGE -->
+
+<div class="page" id="page-goals">
+  <div class="header">
+    <div class="header-sub">GOALS</div>
+    <div class="header-title">目標</div>
+  </div>
+  <div class="section">
+    <div class="goal-card">
+      <div class="goal-card-header">
+        <span class="goal-badge badge-3m">3個月目標</span>
+      </div>
+      <input class="goal-inp" id="goal-3m-1" placeholder="目標 1…">
+      <div class="goal-progress">
+        <div class="goal-track"><div class="goal-fill" id="fill-3m-1" style="width:0%"></div></div>
+        <span class="goal-pct" id="pct-3m-1">0%</span>
+        <button class="pct-btn" onclick="adjustPct('3m-1',-10)">−</button>
+        <button class="pct-btn" onclick="adjustPct('3m-1',10)">+</button>
+      </div>
+      <input class="goal-inp" id="goal-3m-2" placeholder="目標 2…" style="margin-top:12px">
+      <div class="goal-progress">
+        <div class="goal-track"><div class="goal-fill" id="fill-3m-2" style="width:0%"></div></div>
+        <span class="goal-pct" id="pct-3m-2">0%</span>
+        <button class="pct-btn" onclick="adjustPct('3m-2',-10)">−</button>
+        <button class="pct-btn" onclick="adjustPct('3m-2',10)">+</button>
+      </div>
+      <input class="goal-inp" id="goal-3m-3" placeholder="目標 3…" style="margin-top:12px">
+      <div class="goal-progress">
+        <div class="goal-track"><div class="goal-fill" id="fill-3m-3" style="width:0%"></div></div>
+        <span class="goal-pct" id="pct-3m-3">0%</span>
+        <button class="pct-btn" onclick="adjustPct('3m-3',-10)">−</button>
+        <button class="pct-btn" onclick="adjustPct('3m-3',10)">+</button>
+      </div>
+    </div>
+
+```
+<div class="goal-card">
+  <div class="goal-card-header">
+    <span class="goal-badge badge-1m">1個月目標</span>
+  </div>
+  <input class="goal-inp" id="goal-1m-1" placeholder="目標 1…">
+  <div class="goal-progress">
+    <div class="goal-track"><div class="goal-fill" id="fill-1m-1" style="width:0%"></div></div>
+    <span class="goal-pct" id="pct-1m-1">0%</span>
+    <button class="pct-btn" onclick="adjustPct('1m-1',-10)">−</button>
+    <button class="pct-btn" onclick="adjustPct('1m-1',10)">+</button>
+  </div>
+  <input class="goal-inp" id="goal-1m-2" placeholder="目標 2…" style="margin-top:12px">
+  <div class="goal-progress">
+    <div class="goal-track"><div class="goal-fill" id="fill-1m-2" style="width:0%"></div></div>
+    <span class="goal-pct" id="pct-1m-2">0%</span>
+    <button class="pct-btn" onclick="adjustPct('1m-2',-10)">−</button>
+    <button class="pct-btn" onclick="adjustPct('1m-2',10)">+</button>
+  </div>
+  <input class="goal-inp" id="goal-1m-3" placeholder="目標 3…" style="margin-top:12px">
+  <div class="goal-progress">
+    <div class="goal-track"><div class="goal-fill" id="fill-1m-3" style="width:0%"></div></div>
+    <span class="goal-pct" id="pct-1m-3">0%</span>
+    <button class="pct-btn" onclick="adjustPct('1m-3',-10)">−</button>
+    <button class="pct-btn" onclick="adjustPct('1m-3',10)">+</button>
+  </div>
+</div>
+
+<button class="save-btn" onclick="saveGoals()" style="margin:0 0 16px">💾 儲存目標</button>
+```
+
+  </div>
+</div>
+
+<!-- REVIEW PAGE -->
+
+<div class="page" id="page-review">
+  <div class="header">
+    <div class="header-sub">REVIEW</div>
+    <div class="header-title">回顧 / 補填</div>
+  </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchReviewTab('weekly')">每週回顧</button>
+    <button class="sub-tab" onclick="switchReviewTab('backfill')">補填記錄</button>
+  </div>
+
+  <!-- WEEKLY -->
+
+  <div id="review-weekly">
+    <div class="section" style="padding-top:0">
+      <div class="week-nav">
+        <button class="week-nav-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="week-label" id="week-label"></div>
+        <button class="week-nav-btn" onclick="changeWeek(1)">›</button>
+      </div>
+      <div class="week-days" id="week-days"></div>
+    </div>
+    <div class="section" style="padding-top:0">
+      <div class="sec-label">週回顧備注</div>
+      <textarea class="note-inp" id="weekly-review-note" placeholder="呢個星期點？有咩想記錄？" rows="3"></textarea>
+      <button class="save-btn" onclick="saveWeeklyReview()" style="margin:12px 0 0;width:100%">儲存週回顧</button>
+    </div>
+  </div>
+
+  <!-- BACKFILL -->
+
+  <div id="review-backfill" style="display:none">
+    <div class="section" style="padding-top:0">
+      <div class="sec-label">選擇日期</div>
+      <div class="date-picker-row">
+        <input type="date" class="date-inp" id="backfill-date">
+        <button class="go-btn" onclick="loadBackfill()">載入</button>
+      </div>
+      <div id="backfill-form" style="display:none">
+        <div class="sec-label" style="margin-bottom:10px">情緒</div>
+        <div class="emo-cats" id="emo-cats-backfill"></div>
+        <div class="emo-detail" id="emo-detail-backfill">
+          <div class="emo-detail-title">細項</div>
+          <div class="emo-chips" id="emo-chips-backfill"></div>
+        </div>
+        <textarea class="reason-input" id="reason-backfill" placeholder="情緒原因…" rows="2" style="margin:10px 0"></textarea>
+        <div class="sec-label">能量</div>
+        <div class="energy-track" id="energy-track-backfill">
+          <div class="energy-fill" id="energy-fill-backfill" style="width:50%"></div>
+        </div>
+        <div class="energy-labels" style="margin-bottom:14px"><span>😴</span><span id="energy-val-backfill">5</span><span>⚡</span></div>
+        <div class="sec-label">備注</div>
+        <textarea class="note-inp" id="note-backfill" placeholder="當日發生咩事…" rows="3"></textarea>
+        <button class="save-btn" onclick="saveBackfill()" style="margin:12px 0 0;width:100%">💾 儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANALYSIS PAGE -->
+
+<div class="page" id="page-analysis">
+  <div class="header">
+    <div class="header-sub">ANALYSIS</div>
+    <div class="header-title">分析</div>
+  </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchAnalysisTab('emotion')">情緒</button>
+    <button class="sub-tab" onclick="switchAnalysisTab('productivity')">生產力</button>
+    <button class="sub-tab" onclick="switchAnalysisTab('correlation')">關聯</button>
+    <button class="sub-tab" onclick="switchAnalysisTab('feelbetter')">Feel Better</button>
+  </div>
+
+  <div id="analysis-emotion">
+    <div class="section" style="padding-top:0">
+      <div class="chart-card">
+        <div class="chart-title">過去30日情緒趨勢</div>
+        <div class="trend-chart" id="trend-chart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">情緒觸發器分析</div>
+        <div style="margin-bottom:10px;font-size:12px;color:var(--accent)">😊 令你開心嘅原因</div>
+        <div class="trigger-list" id="trigger-positive"></div>
+        <div style="margin:12px 0 8px;font-size:12px;color:var(--danger)">😔 令你唔開心嘅原因</div>
+        <div class="trigger-list" id="trigger-negative"></div>
+      </div>
+      <div id="month-summary-wrap"></div>
+    </div>
+  </div>
+
+  <div id="analysis-productivity" style="display:none">
+    <div class="section" style="padding-top:0">
+      <div class="chart-card">
+        <div class="chart-title">最高效時段</div>
+        <div class="peak-chart" id="peak-chart"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:9px;color:var(--text-dim);font-family:'Space Mono',monospace">6am</span>
+          <span style="font-size:9px;color:var(--text-dim);font-family:'Space Mono',monospace">12pm</span>
+          <span style="font-size:9px;color:var(--text-dim);font-family:'Space Mono',monospace">6pm</span>
+          <span style="font-size:9px;color:var(--text-dim);font-family:'Space Mono',monospace">12am</span>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">任務完成統計</div>
+        <div class="correlation-grid" id="productivity-stats"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="analysis-correlation" style="display:none">
+    <div class="section" style="padding-top:0">
+      <div class="chart-card">
+        <div class="chart-title">情緒 × 生產力關係</div>
+        <div class="correlation-grid" id="correlation-grid"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">能量 × 任務完成率</div>
+        <div id="energy-correlation"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="analysis-feelbetter" style="display:none">
+    <div class="section" style="padding-top:0">
+      <div class="feel-better-card">
+        <div class="feel-better-title">💜 你嘅 Feel Better 清單</div>
+        <div class="feel-better-list" id="feel-better-list"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);line-height:1.6;padding:0 4px">
+        根據你過去情緒記錄分析，當你心情低落時，以下係令你感覺變好嘅情況：
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- NAV -->
+
 <nav class="nav">
-  <button class="nav-btn active" data-page="today">
-    <span class="icon">✦</span>今日
-  </button>
-  <button class="nav-btn" data-page="history">
-    <span class="icon">◈</span>記錄
-  </button>
-  <button class="nav-btn" data-page="stats">
-    <span class="icon">◉</span>統計
-  </button>
+  <button class="nav-btn active" data-page="today"><span class="icon">✦</span>今日</button>
+  <button class="nav-btn" data-page="goals"><span class="icon">◎</span>目標</button>
+  <button class="nav-btn" data-page="review"><span class="icon">◈</span>回顧</button>
+  <button class="nav-btn" data-page="analysis"><span class="icon">◉</span>分析</button>
 </nav>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- DETAIL MODAL -->
+<!-- MODAL -->
+
 <div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-content">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div id="modal-body"></div>
   </div>
 </div>
 
 <script>
-const EMOTIONS = [
-  { emoji:'😄', label:'開心', key:'happy' },
-  { emoji:'😌', label:'平靜', key:'calm' },
-  { emoji:'😤', label:'勁爆', key:'pumped' },
-  { emoji:'😔', label:'低落', key:'sad' },
-  { emoji:'😰', label:'焦慮', key:'anxious' },
-  { emoji:'😡', label:'煩躁', key:'angry' },
-  { emoji:'😴', label:'攰', key:'tired' },
-  { emoji:'🤩', label:'興奮', key:'excited' },
-  { emoji:'😕', label:'迷茫', key:'lost' },
-  { emoji:'🥰', label:'感恩', key:'grateful' },
+// ============================================================
+// EMOTION DATA
+// ============================================================
+const EMO_CATS = [
+  { key:'joy', label:'快樂', emoji:'😊', color:'var(--joy)', intensities:['低強度','中強度','高強度'],
+    items:{ '低強度':['安心','自在','平靜','輕鬆'], '中強度':['快樂','開朗','滿足','愉悅'], '高強度':['狂喜','興奮','成就感','欣喜'] } },
+  { key:'anger', label:'憤怒', emoji:'😤', color:'var(--anger)', intensities:['低強度','中強度','高強度'],
+    items:{ '低強度':['煩躁','不悅','悶悶不樂'], '中強度':['氣憤','不滿','惱火','憤慨'], '高強度':['憤怒','暴怒','義憤填膺'] } },
+  { key:'sadness', label:'悲傷', emoji:'😔', color:'var(--sadness)', intensities:['低強度','中強度','高強度'],
+    items:{ '低強度':['惆悵','遺憾','感傷'], '中強度':['憂鬱','難過','沮喪','孤獨'], '高強度':['絕望','心碎','萬念俱灰'] } },
+  { key:'fear', label:'恐懼', emoji:'😰', color:'var(--fear)', intensities:['低強度','中強度','高強度'],
+    items:{ '低強度':['忐忑','不安','顧忌'], '中強度':['害怕','焦慮','擔憂','緊張'], '高強度':['恐懼','驚恐','恐慌'] } },
+  { key:'surprise', label:'驚訝', emoji:'😲', color:'var(--surprise)', intensities:['正面','負面','中性'],
+    items:{ '正面':['驚喜','讚嘆','不可思議'], '負面':['震驚','錯愕','驚嚇'], '中性':['意外','困惑','好奇'] } },
+  { key:'disgust', label:'厭惡', emoji:'😒', color:'var(--disgust)', intensities:['低強度','中強度','高強度'],
+    items:{ '低強度':['彆扭','嫌棄','不耐'], '中強度':['討厭','輕蔑','排斥'], '高強度':['噁心','唾棄','極度反感'] } },
+  { key:'complex', label:'複雜', emoji:'🌀', color:'var(--complex)', intensities:['社會性'],
+    items:{ '社會性':['羞愧','內疚','嫉妒','羨慕','自豪','委屈','感恩','迷茫','麻木'] } },
 ];
 
+// ============================================================
 // STATE
-let state = {
-  emotion: null,
-  energy: 5,
-  tasks: [],
-  note: ''
+// ============================================================
+let todayState = {
+  morning: { catKey:null, intensity:null, detail:null, reason:'', energy:5 },
+  evening: { catKey:null, intensity:null, detail:null, reason:'', energy:5 },
+  mits: [{text:'',done:false},{text:'',done:false},{text:'',done:false}],
+  timelogs: [],
+  noteMorning: '',
+  noteEvening: '',
 };
+let goalState = {};
+let weekOffset = 0;
+let backfillState = { catKey:null, intensity:null, detail:null, reason:'', energy:5 };
+let currentCheckin = 'morning';
 
+// ============================================================
 // STORAGE
-function getAll() {
-  try { return JSON.parse(localStorage.getItem('daily_logs') || '{}'); } catch { return {}; }
-}
-function saveAll(data) {
-  localStorage.setItem('daily_logs', JSON.stringify(data));
-}
-function todayKey() {
-  return new Date().toISOString().slice(0,10);
-}
+// ============================================================
+function getAll() { try { return JSON.parse(localStorage.getItem('daily_v2')||'{}'); } catch { return {}; } }
+function saveAll(d) { localStorage.setItem('daily_v2', JSON.stringify(d)); }
+function todayKey() { return new Date().toISOString().slice(0,10); }
+function getGoals() { try { return JSON.parse(localStorage.getItem('goals_v2')||'{}'); } catch { return {}; } }
+function saveGoalsStore(d) { localStorage.setItem('goals_v2', JSON.stringify(d)); }
+function getWeeklyReviews() { try { return JSON.parse(localStorage.getItem('weekly_reviews')||'{}'); } catch { return {}; } }
+function saveWeeklyReviews(d) { localStorage.setItem('weekly_reviews', JSON.stringify(d)); }
+
 function formatDate(key) {
-  const d = new Date(key + 'T00:00:00');
-  const days = ['日','一','二','三','四','五','六'];
+  const d = new Date(key+'T00:00:00');
+  const days=['日','一','二','三','四','五','六'];
   return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 (星期${days[d.getDay()]})`;
 }
+function formatDateShort(key) {
+  const d = new Date(key+'T00:00:00');
+  const days=['日','一','二','三','四','五','六'];
+  return `${d.getMonth()+1}/${d.getDate()} (${days[d.getDay()]})`;
+}
 
-// INIT TODAY
-function initToday() {
-  const key = todayKey();
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  document.getElementById('today-date-label').textContent = formatDate(todayKey());
   const all = getAll();
+  const key = todayKey();
   if (all[key]) {
     const s = all[key];
-    state.emotion = s.emotion;
-    state.energy = s.energy ?? 5;
-    state.tasks = s.tasks ?? [];
-    state.note = s.note ?? '';
-  } else {
-    state = { emotion: null, energy: 5, tasks: [], note: '' };
+    todayState.morning = s.morning || todayState.morning;
+    todayState.evening = s.evening || todayState.evening;
+    todayState.mits = s.mits || todayState.mits;
+    todayState.timelogs = s.timelogs || [];
+    todayState.noteMorning = s.noteMorning || '';
+    todayState.noteEvening = s.noteEvening || '';
   }
-  renderToday();
+  goalState = getGoals();
+  renderEmoCats('morning');
+  renderEmoCats('evening');
+  renderEmoCats('backfill');
+  renderMITs();
+  renderTimelogs();
+  renderGoals();
+  renderWeek();
+  setupEnergyTrack('morning');
+  setupEnergyTrack('evening');
+  setupEnergyTrack('backfill');
+  document.getElementById('note-morning').value = todayState.noteMorning;
+  document.getElementById('note-evening').value = todayState.noteEvening;
+  // restore emotion UI
+  if (todayState.morning.catKey) restoreEmoUI('morning');
+  if (todayState.evening.catKey) restoreEmoUI('evening');
+  // set time default
+  const now = new Date();
+  document.getElementById('timelog-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  document.getElementById('backfill-date').value = todayKey();
 }
 
-// RENDER TODAY
-function renderToday() {
-  document.getElementById('today-date-label').textContent = formatDate(todayKey());
+// ============================================================
+// CHECKIN TOGGLE
+// ============================================================
+function switchCheckin(mode) {
+  currentCheckin = mode;
+  document.querySelectorAll('.checkin-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && mode==='morning') || (i===1 && mode==='evening'));
+  });
+  document.getElementById('morning-section').style.display = mode==='morning' ? 'block' : 'none';
+  document.getElementById('evening-section').style.display = mode==='evening' ? 'block' : 'none';
+}
 
-  // emotion grid
-  const grid = document.getElementById('emotion-grid');
-  grid.innerHTML = '';
-  EMOTIONS.forEach(e => {
+// ============================================================
+// EMOTION RENDER
+// ============================================================
+function renderEmoCats(slot) {
+  const el = document.getElementById(`emo-cats-${slot}`);
+  el.innerHTML = '';
+  EMO_CATS.forEach(cat => {
     const btn = document.createElement('button');
-    btn.className = 'emotion-btn' + (state.emotion === e.key ? ' selected' : '');
-    btn.innerHTML = `${e.emoji}<span class="label">${e.label}</span>`;
-    btn.onclick = () => { state.emotion = e.key; renderToday(); };
-    grid.appendChild(btn);
+    btn.className = `emo-cat-btn ${cat.key}`;
+    const state = slot==='backfill' ? backfillState : todayState[slot];
+    if (state.catKey === cat.key) btn.classList.add('selected');
+    btn.innerHTML = `${cat.emoji}<span>${cat.label}</span>`;
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.onclick = () => selectEmoCat(slot, cat.key);
+    el.appendChild(btn);
   });
+}
 
-  // energy
-  const pct = (state.energy / 10) * 100;
-  document.getElementById('energy-fill').style.width = pct + '%';
-  document.getElementById('energy-val').textContent = state.energy;
+function selectEmoCat(slot, catKey) {
+  const state = slot==='backfill' ? backfillState : todayState[slot];
+  state.catKey = catKey;
+  state.intensity = null;
+  state.detail = null;
+  renderEmoCats(slot);
+  renderEmoDetail(slot);
+}
 
-  // tasks
-  const tl = document.getElementById('task-list');
-  tl.innerHTML = '';
-  state.tasks.forEach((t, i) => {
+function renderEmoDetail(slot) {
+  const state = slot==='backfill' ? backfillState : todayState[slot];
+  const detail = document.getElementById(`emo-detail-${slot}`);
+  if (!state.catKey) { detail.classList.remove('show'); return; }
+  detail.classList.add('show');
+  const cat = EMO_CATS.find(c => c.key === state.catKey);
+
+  // intensity
+  const intEl = document.getElementById(`intensity-${slot}`);
+  if (intEl) {
+    intEl.innerHTML = '';
+    cat.intensities.forEach(int => {
+      const btn = document.createElement('button');
+      btn.className = 'intensity-btn' + (state.intensity===int?' selected':'');
+      btn.textContent = int;
+      btn.onclick = () => { state.intensity = int; renderEmoDetail(slot); };
+      intEl.appendChild(btn);
+    });
+  }
+
+  // chips
+  const chipsEl = document.getElementById(`emo-chips-${slot}`);
+  chipsEl.innerHTML = '';
+  const intensity = state.intensity || cat.intensities[0];
+  const items = cat.items[intensity] || Object.values(cat.items).flat();
+  items.forEach(item => {
+    const chip = document.createElement('button');
+    chip.className = 'emo-chip' + (state.detail===item?' selected':'');
+    chip.textContent = item;
+    chip.onclick = () => { state.detail = item; renderEmoDetail(slot); };
+    chipsEl.appendChild(chip);
+  });
+}
+
+function restoreEmoUI(slot) {
+  renderEmoDetail(slot);
+}
+
+// ============================================================
+// ENERGY
+// ============================================================
+function setupEnergyTrack(slot) {
+  const track = document.getElementById(`energy-track-${slot}`);
+  const fill = document.getElementById(`energy-fill-${slot}`);
+  const val = document.getElementById(`energy-val-${slot}`);
+  const state = slot==='backfill' ? backfillState : (slot==='morning' ? todayState.morning : todayState.evening);
+
+  // init
+  fill.style.width = (state.energy/10*100)+'%';
+  val.textContent = state.energy;
+
+  function update(e) {
+    const rect = track.getBoundingClientRect();
+    const x = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
+    let pct = Math.max(0.1, Math.min(1, x/rect.width));
+    state.energy = Math.max(1, Math.round(pct*10));
+    fill.style.width = (state.energy/10*100)+'%';
+    val.textContent = state.energy;
+  }
+  track.addEventListener('touchstart', update, {passive:true});
+  track.addEventListener('touchmove', update, {passive:true});
+  track.addEventListener('mousedown', e => {
+    update(e);
+    const mm = ev => update(ev);
+    document.addEventListener('mousemove', mm);
+    document.addEventListener('mouseup', ()=>document.removeEventListener('mousemove',mm), {once:true});
+  });
+}
+
+// ============================================================
+// MITs
+// ============================================================
+function renderMITs() {
+  const el = document.getElementById('mit-list');
+  el.innerHTML = '';
+  todayState.mits.forEach((mit, i) => {
     const div = document.createElement('div');
-    div.className = 'task-item';
+    div.className = 'mit-item';
     div.innerHTML = `
-      <div class="task-check ${t.done ? 'done' : ''}" data-i="${i}">${t.done ? '✓' : ''}</div>
-      <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
-      <button class="task-del" data-i="${i}">×</button>
+      <div class="mit-num">${i+1}</div>
+      <input class="mit-input" placeholder="最重要任務 ${i+1}…" value="${mit.text}" data-i="${i}">
+      <div class="mit-check ${mit.done?'done':''}" data-i="${i}">${mit.done?'✓':''}</div>
     `;
-    tl.appendChild(div);
+    div.querySelector('.mit-input').oninput = e => { todayState.mits[i].text = e.target.value; };
+    div.querySelector('.mit-check').onclick = () => {
+      todayState.mits[i].done = !todayState.mits[i].done;
+      renderMITs();
+    };
+    el.appendChild(div);
   });
-
-  // note
-  document.getElementById('note-input').value = state.note;
 }
 
-// ENERGY DRAG
-const track = document.getElementById('energy-track');
-function updateEnergy(e) {
-  const rect = track.getBoundingClientRect();
-  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  const pct = Math.max(0, Math.min(1, x / rect.width));
-  state.energy = Math.round(pct * 10);
-  if (state.energy === 0) state.energy = 1;
-  document.getElementById('energy-fill').style.width = (state.energy / 10 * 100) + '%';
-  document.getElementById('energy-val').textContent = state.energy;
-}
-track.addEventListener('touchstart', updateEnergy, { passive: true });
-track.addEventListener('touchmove', updateEnergy, { passive: true });
-track.addEventListener('mousedown', e => {
-  updateEnergy(e);
-  const mm = ev => updateEnergy(ev);
-  document.addEventListener('mousemove', mm);
-  document.addEventListener('mouseup', () => document.removeEventListener('mousemove', mm), {once:true});
-});
-
-// ADD TASK
-document.getElementById('add-task-btn').onclick = addTask;
-document.getElementById('task-input').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-function addTask() {
-  const inp = document.getElementById('task-input');
-  const val = inp.value.trim();
-  if (!val) return;
-  state.tasks.push({ text: val, done: false });
-  inp.value = '';
-  renderToday();
+// ============================================================
+// TIME LOG
+// ============================================================
+function addTimeLog() {
+  const time = document.getElementById('timelog-time').value;
+  const act = document.getElementById('timelog-act').value.trim();
+  if (!act) return;
+  todayState.timelogs.push({ time, activity: act });
+  todayState.timelogs.sort((a,b)=>a.time.localeCompare(b.time));
+  document.getElementById('timelog-act').value = '';
+  renderTimelogs();
 }
 
-// TASK ACTIONS (delegate)
-document.getElementById('task-list').addEventListener('click', e => {
-  const chk = e.target.closest('.task-check');
-  const del = e.target.closest('.task-del');
-  if (chk) {
-    const i = +chk.dataset.i;
-    state.tasks[i].done = !state.tasks[i].done;
-    renderToday();
-  }
-  if (del) {
-    const i = +del.dataset.i;
-    state.tasks.splice(i, 1);
-    renderToday();
-  }
-});
+function renderTimelogs() {
+  const el = document.getElementById('timelog-list');
+  el.innerHTML = '';
+  todayState.timelogs.forEach((log, i) => {
+    const div = document.createElement('div');
+    div.className = 'timelog-item';
+    div.innerHTML = `
+      <span class="timelog-time">${log.time}</span>
+      <span class="timelog-text">${log.activity}</span>
+      <button class="timelog-del" data-i="${i}">×</button>
+    `;
+    div.querySelector('.timelog-del').onclick = () => {
+      todayState.timelogs.splice(i,1);
+      renderTimelogs();
+    };
+    el.appendChild(div);
+  });
+}
 
-// NOTE
-document.getElementById('note-input').addEventListener('input', e => {
-  state.note = e.target.value;
-});
+// ============================================================
+// SAVE TODAY
+// ============================================================
+function saveToday() {
+  todayState.noteMorning = document.getElementById('note-morning').value;
+  todayState.noteEvening = document.getElementById('note-evening').value;
+  todayState.morning.reason = document.getElementById('reason-morning').value;
+  todayState.evening.reason = document.getElementById('reason-evening').value;
 
-// SAVE
-document.getElementById('save-btn').onclick = () => {
   const all = getAll();
-  all[todayKey()] = { ...state, savedAt: new Date().toISOString() };
+  all[todayKey()] = { ...todayState, savedAt: new Date().toISOString() };
   saveAll(all);
   showToast('✓ 儲存咗！');
+}
+
+// ============================================================
+// GOALS
+// ============================================================
+function renderGoals() {
+  const g = goalState;
+  ['3m-1','3m-2','3m-3','1m-1','1m-2','1m-3'].forEach(id => {
+    if (g[id]) {
+      const inp = document.getElementById(`goal-${id}`);
+      if (inp) inp.value = g[id].text || '';
+      const pct = g[id].pct || 0;
+      const fill = document.getElementById(`fill-${id}`);
+      const pctEl = document.getElementById(`pct-${id}`);
+      if (fill) fill.style.width = pct+'%';
+      if (pctEl) pctEl.textContent = pct+'%';
+    }
+  });
+}
+
+function adjustPct(id, delta) {
+  if (!goalState[id]) goalState[id] = { text:'', pct:0 };
+  goalState[id].pct = Math.max(0, Math.min(100, (goalState[id].pct||0)+delta));
+  const fill = document.getElementById(`fill-${id}`);
+  const pctEl = document.getElementById(`pct-${id}`);
+  if (fill) fill.style.width = goalState[id].pct+'%';
+  if (pctEl) pctEl.textContent = goalState[id].pct+'%';
+}
+
+function saveGoals() {
+  ['3m-1','3m-2','3m-3','1m-1','1m-2','1m-3'].forEach(id => {
+    const inp = document.getElementById(`goal-${id}`);
+    if (!goalState[id]) goalState[id] = { pct:0 };
+    goalState[id].text = inp ? inp.value : '';
+  });
+  saveGoalsStore(goalState);
+  showToast('✓ 目標儲存咗！');
+}
+
+// ============================================================
+// REVIEW - WEEKLY
+// ============================================================
+function getWeekDates(offset) {
+  const now = new Date();
+  const day = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (day===0?6:day-1) + offset*7);
+  const dates = [];
+  for (let i=0;i<7;i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate()+i);
+    dates.push(d.toISOString().slice(0,10));
+  }
+  return dates;
+}
+
+function renderWeek() {
+  const dates = getWeekDates(weekOffset);
+  const all = getAll();
+  const weekReviews = getWeeklyReviews();
+  const weekKey = dates[0];
+
+  document.getElementById('week-label').textContent =
+    `${formatDateShort(dates[0])} — ${formatDateShort(dates[6])}`;
+
+  const note = weekReviews[weekKey] || '';
+  document.getElementById('weekly-review-note').value = note;
+
+  const el = document.getElementById('week-days');
+  el.innerHTML = '';
+  const dayNames = ['一','二','三','四','五','六','日'];
+  dates.forEach((date, i) => {
+    const entry = all[date];
+    const div = document.createElement('div');
+    div.className = 'week-day-item';
+    if (entry) {
+      const emo = entry.morning?.catKey || entry.evening?.catKey;
+      const cat = EMO_CATS.find(c=>c.key===emo);
+      const mitDone = (entry.mits||[]).filter(m=>m.done).length;
+      const mitTotal = (entry.mits||[]).filter(m=>m.text).length;
+      div.innerHTML = `
+        <div class="week-day-header">
+          <span class="week-day-name">星期${dayNames[i]} ${formatDateShort(date)}</span>
+          <span class="week-day-emo">${cat?cat.emoji:'—'}</span>
+        </div>
+        <div class="week-day-tasks" style="color:var(--text-dim)">
+          ${entry.morning?.detail||entry.evening?.detail||''}
+          ${mitTotal>0?`· MIT ${mitDone}/${mitTotal}`:''}
+        </div>
+      `;
+      div.onclick = () => openDayModal(date, entry);
+    } else {
+      div.innerHTML = `
+        <div class="week-day-header">
+          <span class="week-day-name">星期${dayNames[i]} ${formatDateShort(date)}</span>
+        </div>
+        <div class="no-entry">未有記錄</div>
+      `;
+    }
+    el.appendChild(div);
+  });
+}
+
+function changeWeek(delta) {
+  weekOffset += delta;
+  renderWeek();
+}
+
+function saveWeeklyReview() {
+  const dates = getWeekDates(weekOffset);
+  const weekKey = dates[0];
+  const reviews = getWeeklyReviews();
+  reviews[weekKey] = document.getElementById('weekly-review-note').value;
+  saveWeeklyReviews(reviews);
+  showToast('✓ 週回顧儲存咗！');
+}
+
+function openDayModal(date, entry) {
+  const emo = entry.morning?.catKey || entry.evening?.catKey;
+  const cat = EMO_CATS.find(c=>c.key===emo);
+  const detail = entry.morning?.detail || entry.evening?.detail || '';
+  const reason = entry.morning?.reason || entry.evening?.reason || '';
+  const mits = (entry.mits||[]).filter(m=>m.text);
+  const timelogs = entry.timelogs || [];
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:6px">${formatDate(date)}</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <span style="font-size:32px">${cat?cat.emoji:'—'}</span>
+      <div>
+        <div style="font-size:16px;font-weight:600">${cat?cat.label:''} ${detail?`· ${detail}`:''}</div>
+        ${reason?`<div style="font-size:13px;color:var(--text-dim);margin-top:2px">${reason}</div>`:''}
+      </div>
+    </div>
+    ${mits.length?`
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text-dim);margin-bottom:8px">MIT 任務</div>
+      ${mits.map(m=>`<div style="display:flex;gap:8px;align-items:center;font-size:14px;margin-bottom:6px">
+        <span>${m.done?'✅':'⬜'}</span><span>${m.text}</span>
+      </div>`).join('')}
+    `:''}
+    ${timelogs.length?`
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text-dim);margin:12px 0 8px">時間記錄</div>
+      ${timelogs.map(t=>`<div style="display:flex;gap:10px;font-size:13px;margin-bottom:5px">
+        <span style="color:var(--accent3);font-family:'Space Mono',monospace;min-width:45px">${t.time}</span>
+        <span>${t.activity}</span>
+      </div>`).join('')}
+    `:''}
+    ${entry.noteEvening||entry.noteMorning?`
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text-dim);margin:12px 0 8px">備注</div>
+      <div style="font-size:13px;color:var(--text-dim);background:var(--surface2);border-radius:10px;padding:12px;line-height:1.6">${entry.noteEvening||entry.noteMorning}</div>
+    `:''}
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ============================================================
+// BACKFILL
+// ============================================================
+function loadBackfill() {
+  const date = document.getElementById('backfill-date').value;
+  if (!date) return;
+  const all = getAll();
+  const entry = all[date];
+  backfillState = { catKey:null, intensity:null, detail:null, reason:'', energy:5 };
+  if (entry) {
+    backfillState.catKey = entry.morning?.catKey || entry.evening?.catKey || null;
+    backfillState.intensity = entry.morning?.intensity || null;
+    backfillState.detail = entry.morning?.detail || null;
+    backfillState.reason = entry.morning?.reason || '';
+    backfillState.energy = entry.morning?.energy || 5;
+    document.getElementById('note-backfill').value = entry.noteMorning || entry.noteEvening || '';
+  } else {
+    document.getElementById('note-backfill').value = '';
+  }
+  renderEmoCats('backfill');
+  if (backfillState.catKey) renderEmoDetail('backfill');
+  const fill = document.getElementById('energy-fill-backfill');
+  const val = document.getElementById('energy-val-backfill');
+  if (fill) fill.style.width = (backfillState.energy/10*100)+'%';
+  if (val) val.textContent = backfillState.energy;
+  document.getElementById('backfill-form').style.display = 'block';
+}
+
+function saveBackfill() {
+  const date = document.getElementById('backfill-date').value;
+  if (!date) return;
+  backfillState.reason = document.getElementById('reason-backfill').value;
+  const all = getAll();
+  if (!all[date]) all[date] = {};
+  all[date].morning = { ...backfillState };
+  all[date].noteMorning = document.getElementById('note-backfill').value;
+  all[date].savedAt = new Date().toISOString();
+  saveAll(all);
+  showToast('✓ 補填儲存咗！');
+  renderWeek();
+}
+
+// ============================================================
+// ANALYSIS
+// ============================================================
+function renderAnalysis(tab) {
+  if (tab==='emotion') renderEmotionAnalysis();
+  if (tab==='productivity') renderProductivityAnalysis();
+  if (tab==='correlation') renderCorrelationAnalysis();
+  if (tab==='feelbetter') renderFeelBetter();
+}
+
+function renderEmotionAnalysis() {
+  const all = getAll();
+  const keys = Object.keys(all).sort();
+  const last30 = keys.slice(-30);
+
+  // TREND CHART
+  const trend = document.getElementById('trend-chart');
+  trend.innerHTML = '';
+  if (last30.length === 0) {
+    trend.innerHTML = '<div style="color:var(--text-dim);font-size:13px">未有數據</div>';
+  } else {
+    const catColors = { joy:'var(--joy)', anger:'var(--anger)', sadness:'var(--sadness)', fear:'var(--fear)', surprise:'var(--surprise)', disgust:'var(--disgust)', complex:'var(--complex)' };
+    last30.forEach(key => {
+      const entry = all[key];
+      const catKey = entry.morning?.catKey || entry.evening?.catKey;
+      const cat = EMO_CATS.find(c=>c.key===catKey);
+      const energy = entry.morning?.energy || entry.evening?.energy || 5;
+      const h = (energy/10)*70;
+      const wrap = document.createElement('div');
+      wrap.className = 'trend-bar-wrap';
+      const d = new Date(key+'T00:00:00');
+      wrap.innerHTML = `
+        <div class="trend-bar" style="height:${h}px;background:${cat?catColors[catKey]:'var(--surface2)'}"></div>
+        <span class="trend-bar-label">${d.getDate()}</span>
+      `;
+      wrap.title = `${formatDateShort(key)} ${cat?cat.label:''}`;
+      trend.appendChild(wrap);
+    });
+  }
+
+  // TRIGGERS
+  const posReasons = [], negReasons = [];
+  keys.forEach(key => {
+    const entry = all[key];
+    const catKey = entry.morning?.catKey || entry.evening?.catKey;
+    const reason = entry.morning?.reason || entry.evening?.reason || '';
+    if (!reason) return;
+    if (['joy','surprise'].includes(catKey)) posReasons.push(reason);
+    else if (['anger','sadness','fear','disgust'].includes(catKey)) negReasons.push(reason);
+  });
+
+  renderTriggers('trigger-positive', posReasons, 'var(--accent)');
+  renderTriggers('trigger-negative', negReasons, 'var(--danger)');
+
+  // MONTHLY SUMMARY
+  const wrap = document.getElementById('month-summary-wrap');
+  if (last30.length >= 5) {
+    const emoCount = {};
+    last30.forEach(key => {
+      const catKey = all[key].morning?.catKey || all[key].evening?.catKey;
+      if (catKey) emoCount[catKey] = (emoCount[catKey]||0)+1;
+    });
+    const topEmo = Object.entries(emoCount).sort((a,b)=>b[1]-a[1])[0];
+    const topCat = topEmo ? EMO_CATS.find(c=>c.key===topEmo[0]) : null;
+    const avgEnergy = last30.reduce((s,k)=>s+(all[k].morning?.energy||all[k].evening?.energy||5),0)/last30.length;
+    wrap.innerHTML = `
+      <div class="month-summary">
+        <div class="month-summary-title">📊 過去30日總結</div>
+        <div class="month-summary-text">
+          記錄咗 <strong style="color:var(--accent)">${last30.length}</strong> 日。
+          最常見情緒係 <strong style="color:var(--accent)">${topCat?topCat.label+'  '+topCat.emoji:''}</strong>，出現咗 ${topEmo?topEmo[1]:0} 次。
+          平均能量指數係 <strong style="color:var(--accent)">${avgEnergy.toFixed(1)}</strong>/10。
+        </div>
+      </div>
+    `;
+  } else {
+    wrap.innerHTML = '';
+  }
+}
+
+function renderTriggers(elId, reasons, color) {
+  const el = document.getElementById(elId);
+  if (reasons.length === 0) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text-dim)">未有足夠數據</div>';
+    return;
+  }
+  // Extract keywords (simple word frequency)
+  const wordCount = {};
+  reasons.forEach(r => {
+    r.split(/[\s，、。！？,]+/).forEach(w => {
+      if (w.length >= 2) wordCount[w] = (wordCount[w]||0)+1;
+    });
+  });
+  const top = Object.entries(wordCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const max = top[0]?.[1] || 1;
+  el.innerHTML = '';
+  top.forEach(([word, cnt]) => {
+    const div = document.createElement('div');
+    div.className = 'trigger-item';
+    div.innerHTML = `
+      <div class="trigger-bar-wrap">
+        <div class="trigger-label">${word}</div>
+        <div class="trigger-track">
+          <div class="trigger-fill" style="width:${cnt/max*100}%;background:${color}"></div>
+        </div>
+      </div>
+      <span class="trigger-count">${cnt}</span>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function renderProductivityAnalysis() {
+  const all = getAll();
+  const keys = Object.keys(all).sort();
+
+  // PEAK HOURS
+  const hourCount = new Array(18).fill(0); // 6am to 12am = 18 slots
+  keys.forEach(key => {
+    (all[key].timelogs||[]).forEach(log => {
+      const h = parseInt(log.time?.split(':')[0]||0);
+      const slot = h - 6;
+      if (slot >= 0 && slot < 18) hourCount[slot]++;
+    });
+  });
+  const maxH = Math.max(...hourCount, 1);
+  const peakEl = document.getElementById('peak-chart');
+  peakEl.innerHTML = '';
+  hourCount.forEach((cnt, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'peak-bar-wrap';
+    wrap.innerHTML = `<div class="peak-bar" style="height:${Math.max(2,cnt/maxH*55)}px"></div>`;
+    peakEl.appendChild(wrap);
+  });
+
+  // STATS
+  let totalMIT=0, doneMIT=0, totalDays=keys.length;
+  keys.forEach(key => {
+    const mits = (all[key].mits||[]).filter(m=>m.text);
+    totalMIT += mits.length;
+    doneMIT += mits.filter(m=>m.done).length;
+  });
+  const statsEl = document.getElementById('productivity-stats');
+  statsEl.innerHTML = `
+    <div class="corr-item"><div class="corr-num">${totalDays}</div><div class="corr-label">記錄日數</div></div>
+    <div class="corr-item"><div class="corr-num">${doneMIT}</div><div class="corr-label">MIT 完成</div></div>
+    <div class="corr-item"><div class="corr-num">${totalMIT>0?Math.round(doneMIT/totalMIT*100):0}%</div><div class="corr-label">完成率</div></div>
+    <div class="corr-item"><div class="corr-num">${totalDays>0?(totalMIT/totalDays).toFixed(1):0}</div><div class="corr-label">平均每日任務</div></div>
+  `;
+}
+
+function renderCorrelationAnalysis() {
+  const all = getAll();
+  const keys = Object.keys(all).sort();
+
+  // Group by emotion category, avg energy and mit completion
+  const emoStats = {};
+  EMO_CATS.forEach(c => { emoStats[c.key] = { energy:[], mitRate:[] }; });
+
+  keys.forEach(key => {
+    const entry = all[key];
+    const catKey = entry.morning?.catKey || entry.evening?.catKey;
+    if (!catKey || !emoStats[catKey]) return;
+    const energy = entry.morning?.energy || entry.evening?.energy || 5;
+    emoStats[catKey].energy.push(energy);
+    const mits = (entry.mits||[]).filter(m=>m.text);
+    if (mits.length > 0) {
+      emoStats[catKey].mitRate.push(mits.filter(m=>m.done).length / mits.length * 100);
+    }
+  });
+
+  const grid = document.getElementById('correlation-grid');
+  grid.innerHTML = '';
+  EMO_CATS.forEach(cat => {
+    const s = emoStats[cat.key];
+    if (s.energy.length === 0) return;
+    const avgE = (s.energy.reduce((a,b)=>a+b,0)/s.energy.length).toFixed(1);
+    const avgM = s.mitRate.length > 0 ? Math.round(s.mitRate.reduce((a,b)=>a+b,0)/s.mitRate.length) : '—';
+    const div = document.createElement('div');
+    div.className = 'corr-item';
+    div.innerHTML = `
+      <div style="font-size:20px;margin-bottom:4px">${cat.emoji}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">${cat.label}</div>
+      <div style="font-size:13px;color:var(--accent)">⚡${avgE} · ✅${avgM}${typeof avgM==='number'?'%':''}</div>
+    `;
+    grid.appendChild(div);
+  });
+  if (grid.innerHTML === '') {
+    grid.innerHTML = '<div style="color:var(--text-dim);font-size:13px;padding:10px">未有足夠數據</div>';
+  }
+
+  // Energy correlation
+  const energyEl = document.getElementById('energy-correlation');
+  const highEnergy = keys.filter(k => (all[k].morning?.energy||all[k].evening?.energy||5) >= 7);
+  const lowEnergy = keys.filter(k => (all[k].morning?.energy||all[k].evening?.energy||5) <= 4);
+
+  function avgMitRate(ks) {
+    let total=0, done=0;
+    ks.forEach(k => {
+      const mits = (all[k].mits||[]).filter(m=>m.text);
+      total += mits.length;
+      done += mits.filter(m=>m.done).length;
+    });
+    return total > 0 ? Math.round(done/total*100) : 0;
+  }
+
+  energyEl.innerHTML = `
+    <div style="display:flex;gap:10px">
+      <div class="corr-item" style="flex:1;background:var(--surface2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:4px">⚡ 高能量日</div>
+        <div style="font-size:24px;font-weight:700;color:var(--accent)">${avgMitRate(highEnergy)}%</div>
+        <div style="font-size:11px;color:var(--text-dim)">MIT完成率</div>
+      </div>
+      <div class="corr-item" style="flex:1;background:var(--surface2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:4px">😴 低能量日</div>
+        <div style="font-size:24px;font-weight:700;color:var(--danger)">${avgMitRate(lowEnergy)}%</div>
+        <div style="font-size:11px;color:var(--text-dim)">MIT完成率</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderFeelBetter() {
+  const all = getAll();
+  const keys = Object.keys(all).sort();
+  const el = document.getElementById('feel-better-list');
+  el.innerHTML = '';
+
+  // Find days where mood improved: bad day followed by good day
+  const goodDayReasons = [];
+  const goodDayNotes = [];
+  const recoveryPatterns = [];
+
+  for (let i = 1; i < keys.length; i++) {
+    const prevEntry = all[keys[i-1]];
+    const currEntry = all[keys[i]];
+    const prevCat = prevEntry?.morning?.catKey || prevEntry?.evening?.catKey;
+    const currCat = currEntry?.morning?.catKey || currEntry?.evening?.catKey;
+
+    const badCats = ['anger','sadness','fear','disgust'];
+    const goodCats = ['joy','surprise'];
+
+    // Bad day → Good day pattern
+    if (badCats.includes(prevCat) && goodCats.includes(currCat)) {
+      const reason = currEntry.morning?.reason || currEntry.evening?.reason || '';
+      const note = currEntry.noteEvening || currEntry.noteMorning || '';
+      if (reason) recoveryPatterns.push(reason);
+      if (note) recoveryPatterns.push(note);
+    }
+
+    // Collect all good day reasons
+    if (goodCats.includes(currCat)) {
+      const reason = currEntry.morning?.reason || currEntry.evening?.reason || '';
+      const note = currEntry.noteEvening || currEntry.noteMorning || '';
+      if (reason) goodDayReasons.push(reason);
+      if (note) goodDayNotes.push(note);
+    }
+  }
+
+  const totalGoodDays = keys.filter(k => {
+    const cat = all[k]?.morning?.catKey || all[k]?.evening?.catKey;
+    return ['joy','surprise'].includes(cat);
+  }).length;
+
+  // Need at least 5 records to show meaningful analysis
+  if (keys.length < 5) {
+    el.innerHTML = `
+      <div style="text-align:center;padding:30px 10px">
+        <div style="font-size:36px;margin-bottom:12px">🌱</div>
+        <div style="font-size:14px;color:var(--text-dim);line-height:1.7">
+          而家記錄咗 <strong style="color:var(--accent)">${keys.length}</strong> 日<br>
+          記錄多啲之後（建議至少7日），<br>
+          會根據你自己嘅情緒模式<br>
+          生成個人化 Feel Better 清單 💜
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Show stats
+  const statDiv = document.createElement('div');
+  statDiv.style.cssText = 'background:var(--surface2);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--text-dim);line-height:1.7';
+  statDiv.innerHTML = `分析咗 <strong style="color:var(--text)">${keys.length}</strong> 日記錄，其中 <strong style="color:var(--accent)">${totalGoodDays}</strong> 日情緒正面。`;
+  el.appendChild(statDiv);
+
+  // Recovery patterns (bad→good transitions)
+  if (recoveryPatterns.length > 0) {
+    const h1 = document.createElement('div');
+    h1.style.cssText = 'font-size:11px;color:var(--purple);font-family:"Space Mono",monospace;letter-spacing:0.1em;margin:14px 0 8px;text-transform:uppercase';
+    h1.textContent = '😔→😊 低落後令你好返嘅事';
+    el.appendChild(h1);
+    recoveryPatterns.slice(0,4).forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'feel-better-item';
+      div.textContent = r;
+      el.appendChild(div);
+    });
+  }
+
+  // Good day reasons
+  if (goodDayReasons.length > 0) {
+    const h2 = document.createElement('div');
+    h2.style.cssText = 'font-size:11px;color:var(--accent);font-family:"Space Mono",monospace;letter-spacing:0.1em;margin:14px 0 8px;text-transform:uppercase';
+    h2.textContent = '😊 令你開心嘅事';
+    el.appendChild(h2);
+    // Deduplicate similar entries
+    const unique = [...new Set(goodDayReasons)].slice(0,5);
+    unique.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'feel-better-item';
+      div.style.color = 'var(--text)';
+      div.textContent = r;
+      el.appendChild(div);
+    });
+  }
+
+  if (recoveryPatterns.length === 0 && goodDayReasons.length === 0) {
+    el.innerHTML += `
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.7;margin-top:8px">
+        記錄到情緒原因之後，呢度會顯示令你feel better嘅pattern。<br><br>
+        記錄情緒嗰陣記得填返「原因」一欄 😊
+      </div>
+    `;
+  }
+}
+
+// ============================================================
+// NAV
+// ============================================================
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    const page = btn.dataset.page;
+    document.getElementById('page-'+page).classList.add('active');
+    if (page==='review') renderWeek();
+    if (page==='analysis') renderAnalysis('emotion');
+  };
+});
+
+// SUB TABS
+function switchReviewTab(tab) {
+  document.querySelectorAll('#page-review .sub-tab').forEach((t,i)=>{
+    t.classList.toggle('active', (i===0&&tab==='weekly')||(i===1&&tab==='backfill'));
+  });
+  document.getElementById('review-weekly').style.display = tab==='weekly'?'block':'none';
+  document.getElementById('review-backfill').style.display = tab==='backfill'?'block':'none';
+}
+
+function switchAnalysisTab(tab) {
+  document.querySelectorAll('#page-analysis .sub-tab').forEach((t,i)=>{
+    const tabs=['emotion','productivity','correlation','feelbetter'];
+    t.classList.toggle('active', tabs[i]===tab);
+  });
+  ['emotion','productivity','correlation','feelbetter'].forEach(t=>{
+    document.getElementById('analysis-'+t).style.display = t===tab?'block':'none';
+  });
+  renderAnalysis(tab);
+}
+
+// MODAL CLOSE
+document.getElementById('modal-overlay').onclick = e => {
+  if (e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
 };
+
+
 
 // TOAST
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-// NAV
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    const page = btn.dataset.page;
-    document.getElementById('page-' + page).classList.add('active');
-    if (page === 'history') renderHistory();
-    if (page === 'stats') renderStats();
-  };
-});
-
-// HISTORY
-function renderHistory() {
-  const all = getAll();
-  const keys = Object.keys(all).sort().reverse();
-  const el = document.getElementById('history-list');
-  if (keys.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="big">📭</div><p>未有記錄<br>去「今日」tab 儲存第一條記錄啦</p></div>`;
-    return;
-  }
-  el.innerHTML = '';
-  keys.forEach(key => {
-    const entry = all[key];
-    const emo = EMOTIONS.find(e => e.key === entry.emotion);
-    const doneCount = (entry.tasks||[]).filter(t=>t.done).length;
-    const card = document.createElement('div');
-    card.className = 'history-card';
-    const chips = (entry.tasks||[]).slice(0,4).map(t =>
-      `<span class="chip ${t.done?'done':''}">${t.done?'✓ ':''}${t.text}</span>`
-    ).join('');
-    const more = (entry.tasks||[]).length > 4 ? `<span class="chip">+${entry.tasks.length-4}</span>` : '';
-    card.innerHTML = `
-      <div class="history-card-header">
-        <div class="history-card-date">${formatDate(key)}</div>
-        <div class="history-card-emotion">${emo ? emo.emoji : '—'}</div>
-      </div>
-      <div class="history-card-body">
-        <div class="history-task-chips">${chips}${more}</div>
-        ${entry.note ? `<div class="history-note">${entry.note.slice(0,80)}${entry.note.length>80?'…':''}</div>` : ''}
-        <div class="history-energy-bar"><div class="history-energy-fill" style="width:${(entry.energy||5)/10*100}%"></div></div>
-      </div>
-    `;
-    card.onclick = () => openModal(key, entry);
-    el.appendChild(card);
-  });
-}
-
-// MODAL
-function openModal(key, entry) {
-  const emo = EMOTIONS.find(e => e.key === entry.emotion);
-  let tasksHtml = (entry.tasks||[]).map(t =>
-    `<div class="modal-task-item"><span>${t.done?'✅':'⬜'}</span><span>${t.text}</span></div>`
-  ).join('');
-  document.getElementById('modal-body').innerHTML = `
-    <div class="modal-date">${formatDate(key)}</div>
-    <div class="modal-emotion-row">
-      <span class="modal-emotion-big">${emo ? emo.emoji : '—'}</span>
-      <span class="modal-emotion-name">${emo ? emo.label : '未揀'}</span>
-      <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:13px;color:var(--accent)">⚡ ${entry.energy||5}/10</span>
-    </div>
-    ${tasksHtml ? `<div class="modal-section-title">做過</div><div class="modal-task-list">${tasksHtml}</div>` : ''}
-    ${entry.note ? `<div class="modal-section-title">備注</div><div class="modal-note">${entry.note}</div>` : ''}
-    <button class="del-entry-btn" data-key="${key}">🗑 刪除此記錄</button>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.querySelector('.del-entry-btn').onclick = () => {
-    const all = getAll();
-    delete all[key];
-    saveAll(all);
-    closeModal();
-    renderHistory();
-    showToast('已刪除');
-  };
-}
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-document.getElementById('modal-overlay').onclick = e => {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-};
-
-// STATS
-function renderStats() {
-  const all = getAll();
-  const keys = Object.keys(all);
-  const el = document.getElementById('stats-grid');
-  if (keys.length === 0) {
-    el.innerHTML = `<div class="stat-card wide"><div class="empty-state"><div class="big">📊</div><p>未有足夠數據</p></div></div>`;
-    return;
-  }
-  const totalDays = keys.length;
-  const totalTasks = keys.reduce((s,k) => s + (all[k].tasks||[]).length, 0);
-  const doneTasks = keys.reduce((s,k) => s + (all[k].tasks||[]).filter(t=>t.done).length, 0);
-  const avgEnergy = (keys.reduce((s,k) => s + (all[k].energy||5), 0) / totalDays).toFixed(1);
-
-  // emotion freq
-  const emoCount = {};
-  keys.forEach(k => { const e = all[k].emotion; if(e) emoCount[e] = (emoCount[e]||0)+1; });
-  const topEmos = Object.entries(emoCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const emoHtml = topEmos.map(([key, cnt]) => {
-    const e = EMOTIONS.find(x=>x.key===key);
-    return `<div class="emotion-freq-item">${e?e.emoji:''} <span style="color:var(--text-dim)">${cnt}日</span></div>`;
-  }).join('');
-
-  // week chart (last 7 entries)
-  const last7 = keys.sort().slice(-7);
-  const maxT = Math.max(...last7.map(k=>(all[k].tasks||[]).length), 1);
-  const weekHtml = last7.map(k => {
-    const cnt = (all[k].tasks||[]).length;
-    const h = Math.max(4, (cnt/maxT)*50);
-    const d = new Date(k+'T00:00:00');
-    const wd = ['日','一','二','三','四','五','六'][d.getDay()];
-    return `<div class="week-bar-wrap"><div class="week-bar" style="height:${h}px"></div><span class="week-bar-label">${wd}</span></div>`;
-  }).join('');
-
-  el.innerHTML = `
-    <div class="stat-card">
-      <div class="stat-num">${totalDays}</div>
-      <div class="stat-label">記錄日數</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">${avgEnergy}</div>
-      <div class="stat-label">平均能量</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">${doneTasks}</div>
-      <div class="stat-label">完成事項</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">${totalTasks > 0 ? Math.round(doneTasks/totalTasks*100) : 0}%</div>
-      <div class="stat-label">完成率</div>
-    </div>
-    <div class="stat-card wide">
-      <div class="section-label" style="margin-bottom:8px">常見情緒</div>
-      <div class="emotion-freq">${emoHtml || '—'}</div>
-    </div>
-    <div class="stat-card wide">
-      <div class="section-label" style="margin-bottom:4px">近7日 任務量</div>
-      <div class="week-chart">${weekHtml}</div>
-    </div>
-  `;
+  setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
 // BOOT
-initToday();
+init();
 </script>
+
 </body>
 </html>
