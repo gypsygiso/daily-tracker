@@ -54,21 +54,21 @@ font-size: 130%;
 /* NAV */
 .nav {
 position: fixed; bottom: 0; left: 0; right: 0;
-background: var(–surface);
-border-top: 1px solid var(–border);
+background: #2c2c2e;
+border-top: 3px solid #1a1a1a;
 display: flex; z-index: 100;
 padding-bottom: env(safe-area-inset-bottom);
 }
 .nav-btn {
 flex: 1; padding: 12px 0 8px;
 background: none; border: none; cursor: pointer;
-color: var(–text-dim);
+color: #8e8e93;
 font-family: ‘Noto Sans HK’, sans-serif;
 font-size: 13px;
 display: flex; flex-direction: column; align-items: center; gap: 3px;
 transition: color 0.2s;
 }
-.nav-btn.active { color: var(–accent); }
+.nav-btn.active { color: #ffffff; }
 .nav-btn .icon { font-size: 20px; line-height: 1; }
 
 /* PAGES */
@@ -77,18 +77,18 @@ transition: color 0.2s;
 
 /* HEADER */
 .header {
-padding: 52px 20px 16px;
+padding: 16px 20px 16px;
 position: sticky; top: 0;
-background: var(–bg);
+background: #2c2c2e;
 z-index: 50;
-border-bottom: 1px solid var(–border);
+border-bottom: 3px solid #1a1a1a;
 }
 .header-sub {
 font-family: ‘Space Mono’, monospace;
-font-size: 14px; color: var(–text-dim);
+font-size: 14px; color: #8e8e93;
 letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 3px;
 }
-.header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: #ffffff; }
 
 /* SECTION */
 .section { padding: 20px; }
@@ -217,13 +217,13 @@ border-radius: 14px; padding: 16px; margin-bottom: 16px;
 
 /* ENERGY */
 .energy-track {
-background: var(–surface); border-radius: 100px;
-height: 8px; cursor: pointer; position: relative; overflow: hidden;
-margin: 10px 0;
+background: var(–surface2); border-radius: 100px;
+height: 24px; cursor: pointer; position: relative; overflow: hidden;
+margin: 10px 0; border: 1px solid var(–border);
 }
 .energy-fill {
 height: 100%; border-radius: 100px;
-background: linear-gradient(90deg, var(–danger), var(–accent2), var(–accent));
+background: linear-gradient(90deg, #f06e6e, #f0a06e, #5a9e1a);
 transition: width 0.2s;
 }
 .energy-labels {
@@ -312,7 +312,7 @@ transition: border-color 0.2s;
 .save-btn {
 display: block; width: calc(100% - 40px);
 margin: 16px 20px 0; padding: 15px;
-background: var(–accent); border: none; border-radius: 14px;
+background: #1877f2; border: none; border-radius: 14px;
 color: #ffffff; font-family: ‘Noto Sans HK’, sans-serif;
 font-weight: 700; font-size: 15px; cursor: pointer;
 transition: transform 0.15s, opacity 0.15s;
@@ -904,8 +904,8 @@ const EMO_CATS = [
 // STATE
 // ============================================================
 let todayState = {
-  morning: { catKey:null, intensity:null, detail:null, reason:'', energy:5 },
-  evening: { catKey:null, intensity:null, detail:null, reason:'', energy:5 },
+  morning: { catKeys:[], intensity:null, details:[], reason:'', energy:5 },
+  evening: { catKeys:[], intensity:null, details:[], reason:'', energy:5 },
   mits: [{text:'',done:false},{text:'',done:false},{text:'',done:false}],
   timelogs: [],
   noteMorning: '',
@@ -913,7 +913,7 @@ let todayState = {
 };
 let goalState = {};
 let weekOffset = 0;
-let backfillState = { catKey:null, intensity:null, detail:null, reason:'', energy:5 };
+let backfillState = { catKeys:[], intensity:null, details:[], reason:'', energy:5 };
 let currentCheckin = 'morning';
 
 // ============================================================
@@ -968,8 +968,8 @@ function init() {
   document.getElementById('note-morning').value = todayState.noteMorning;
   document.getElementById('note-evening').value = todayState.noteEvening;
   // restore emotion UI
-  if (todayState.morning.catKey) restoreEmoUI('morning');
-  if (todayState.evening.catKey) restoreEmoUI('evening');
+  if (todayState.morning.catKeys?.length > 0) restoreEmoUI('morning');
+  if (todayState.evening.catKeys?.length > 0) restoreEmoUI('evening');
   // set time default
   const now = new Date();
   document.getElementById('timelog-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -993,14 +993,15 @@ function switchCheckin(mode) {
 // ============================================================
 function renderEmoCats(slot) {
   const el = document.getElementById(`emo-cats-${slot}`);
+  if (!el) return;
   el.innerHTML = '';
+  const state = slot==='backfill' ? backfillState : todayState[slot];
+  const selectedKeys = state.catKeys || [];
   EMO_CATS.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = `emo-cat-btn ${cat.key}`;
-    const state = slot==='backfill' ? backfillState : todayState[slot];
-    if (state.catKey === cat.key) btn.classList.add('selected');
+    if (selectedKeys.includes(cat.key)) btn.classList.add('selected');
     btn.innerHTML = `${cat.emoji}<span>${cat.label}</span>`;
-    btn.style.setProperty('--cat-color', cat.color);
     btn.onclick = () => selectEmoCat(slot, cat.key);
     el.appendChild(btn);
   });
@@ -1008,9 +1009,13 @@ function renderEmoCats(slot) {
 
 function selectEmoCat(slot, catKey) {
   const state = slot==='backfill' ? backfillState : todayState[slot];
-  state.catKey = catKey;
-  state.intensity = null;
-  state.detail = null;
+  if (!state.catKeys) state.catKeys = [];
+  const idx = state.catKeys.indexOf(catKey);
+  if (idx === -1) {
+    state.catKeys.push(catKey);
+  } else {
+    state.catKeys.splice(idx, 1);
+  }
   renderEmoCats(slot);
   renderEmoDetail(slot);
 }
@@ -1018,38 +1023,57 @@ function selectEmoCat(slot, catKey) {
 function renderEmoDetail(slot) {
   const state = slot==='backfill' ? backfillState : todayState[slot];
   const detail = document.getElementById(`emo-detail-${slot}`);
-  if (!state.catKey) { detail.classList.remove('show'); return; }
+  if (!detail) return;
+  const selectedKeys = state.catKeys || [];
+  if (selectedKeys.length === 0) { detail.classList.remove('show'); return; }
   detail.classList.add('show');
-  const cat = EMO_CATS.find(c => c.key === state.catKey);
 
-  // intensity
-  const intEl = document.getElementById(`intensity-${slot}`);
-  if (intEl) {
-    intEl.innerHTML = '';
-    cat.intensities.forEach(int => {
-      const btn = document.createElement('button');
-      btn.className = 'intensity-btn' + (state.intensity===int?' selected':'');
-      btn.textContent = int;
-      btn.onclick = () => { state.intensity = int; renderEmoDetail(slot); };
-      intEl.appendChild(btn);
+  // Show chips for all selected categories combined
+  const chipsEl = document.getElementById(`emo-chips-${slot}`);
+  if (chipsEl) {
+    chipsEl.innerHTML = '';
+    selectedKeys.forEach(catKey => {
+      const cat = EMO_CATS.find(c => c.key === catKey);
+      if (!cat) return;
+      const intensity = state.intensity || cat.intensities[0];
+      const items = cat.items[intensity] || Object.values(cat.items).flat();
+      items.forEach(item => {
+        const chip = document.createElement('button');
+        const selectedDetails = state.details || [];
+        chip.className = 'emo-chip' + (selectedDetails.includes(item)?' selected':'');
+        chip.textContent = item;
+        chip.onclick = () => {
+          if (!state.details) state.details = [];
+          const i = state.details.indexOf(item);
+          if (i === -1) state.details.push(item);
+          else state.details.splice(i, 1);
+          renderEmoDetail(slot);
+        };
+        chipsEl.appendChild(chip);
+      });
     });
   }
 
-  // chips
-  const chipsEl = document.getElementById(`emo-chips-${slot}`);
-  chipsEl.innerHTML = '';
-  const intensity = state.intensity || cat.intensities[0];
-  const items = cat.items[intensity] || Object.values(cat.items).flat();
-  items.forEach(item => {
-    const chip = document.createElement('button');
-    chip.className = 'emo-chip' + (state.detail===item?' selected':'');
-    chip.textContent = item;
-    chip.onclick = () => { state.detail = item; renderEmoDetail(slot); };
-    chipsEl.appendChild(chip);
-  });
+  // Intensity for first selected cat
+  const intEl = document.getElementById(`intensity-${slot}`);
+  if (intEl && selectedKeys.length > 0) {
+    const firstCat = EMO_CATS.find(c => c.key === selectedKeys[0]);
+    intEl.innerHTML = '';
+    if (firstCat) {
+      firstCat.intensities.forEach(int => {
+        const btn = document.createElement('button');
+        btn.className = 'intensity-btn' + (state.intensity===int?' selected':'');
+        btn.textContent = int;
+        btn.onclick = () => { state.intensity = int; renderEmoDetail(slot); };
+        intEl.appendChild(btn);
+      });
+    }
+  }
 }
 
 function restoreEmoUI(slot) {
+  const state = todayState[slot];
+  if (!state.catKeys) state.catKeys = state.catKey ? [state.catKey] : [];
   renderEmoDetail(slot);
 }
 
